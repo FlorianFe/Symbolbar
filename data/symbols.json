@@ -1,0 +1,2075 @@
+[
+  [
+    {
+      "code": "amalg",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "cup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "oplus",
+      "package": 0,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "times",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ast",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "dagger",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "oslash",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigcirc",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ddagger",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "otimes",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigtriangledown",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "diamond",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "pm",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "unlhd",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigtriangleup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "div",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rhd",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "unrhd",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bullet",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lhd",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "setminus",
+      "package": 0,
+      "keywords": [
+        "subtraction",
+        "-"
+      ]
+    },
+    {
+      "code": "uplus",
+      "package": 0,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "cap",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "mp",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sqcap",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "vee",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "cdot",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "odot",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sqcup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "wedge",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "circ",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ominus",
+      "package": 0,
+      "keywords": [
+        "subtraction",
+        "-"
+      ]
+    },
+    {
+      "code": "star",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "wr",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "barwedge",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circledcirc",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "intercal",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "boxdot",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circleddash",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "boxminus",
+      "package": 1,
+      "keywords": [
+        "subtraction",
+        "-"
+      ]
+    },
+    {
+      "code": "Cup",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ltimes",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "boxplus",
+      "package": 1,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "curlyvee",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "boxtimes",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "curlywedge",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "rtimes",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Cap",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "divideontimes",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "smallsetminus",
+      "package": 1,
+      "keywords": [
+        "subtraction",
+        "-"
+      ]
+    },
+    {
+      "code": "centerdot",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "dotplus",
+      "package": 1,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "veebar",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circledast",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "doublebarwedge",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "top",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "bigcap",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigotimes",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigwedge",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "prod",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigcup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigsqcup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "coprod",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sum",
+      "package": 0,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "bigodot",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "biguplus",
+      "package": 0,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "int",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bigoplus",
+      "package": 0,
+      "keywords": [
+        "addition",
+        "+"
+      ]
+    },
+    {
+      "code": "bigvee",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "oint",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "iint",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "iiint",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "iiiint",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "idotsint",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "approx",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "equiv",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "="
+      ]
+    },
+    {
+      "code": "perp",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "smile",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "asymp",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "frown",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "prec",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "succ",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bowtie",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Join",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "preceq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "=",
+        "<="
+      ]
+    },
+    {
+      "code": "succeq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "=",
+        ">="
+      ]
+    },
+    {
+      "code": "cong",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "mid",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "propto",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "vdash",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "dashv",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "models",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sim",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "doteq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "="
+      ]
+    },
+    {
+      "code": "parallel",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "simeq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "=",
+        "similar"
+      ]
+    },
+    {
+      "code": "approxeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        "approximately"
+      ]
+    },
+    {
+      "code": "eqcirc",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        "circle"
+      ]
+    },
+    {
+      "code": "succapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "backepsilon",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "fallingdotseq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "="
+      ]
+    },
+    {
+      "code": "succcurlyeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        ">="
+      ]
+    },
+    {
+      "code": "backsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "multimap",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "succsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "backsimeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        "similar"
+      ]
+    },
+    {
+      "code": "pitchfork",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "therefore",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "because",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "precapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "thickapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "between",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "preccurlyeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        "<="
+      ]
+    },
+    {
+      "code": "thicksim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Bumpeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "="
+      ]
+    },
+    {
+      "code": "precsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varpropto",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "bumpeq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "risingdotseq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "="
+      ]
+    },
+    {
+      "code": "Vdash",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circeq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        "circle"
+      ]
+    },
+    {
+      "code": "shortmid",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "vDash",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "curlyeqprec",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "shortparallel",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Vvdash",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "curlyeqsucc",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "=",
+        ">="
+      ]
+    },
+    {
+      "code": "smallfrown",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "doteqdot",
+      "package": 1,
+      "keywords": [
+        "eqal",
+        "="
+      ]
+    },
+    {
+      "code": "smallsmile",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "sqsubset",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sqsupseteq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        ">=",
+        "super",
+        "square"
+      ]
+    },
+    {
+      "code": "supset",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sqsubseteq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        "<=",
+        "sub",
+        "square"
+      ]
+    },
+    {
+      "code": "subset",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "supseteq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        ">=",
+        "super"
+      ]
+    },
+    {
+      "code": "sqsupset",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "subseteq",
+      "package": 0,
+      "keywords": [
+        "equal",
+        ">=",
+        "sub"
+      ]
+    },
+    {
+      "code": "nsubseteq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!<=",
+        "sub",
+        "not"
+      ]
+    },
+    {
+      "code": "subseteqq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "<=",
+        "sub"
+      ]
+    },
+    {
+      "code": "supsetneqq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!>=",
+        "super",
+        "not"
+      ]
+    },
+    {
+      "code": "nsupseteq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!>=",
+        "super",
+        "not"
+      ]
+    },
+    {
+      "code": "subsetneq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!<=",
+        "sub",
+        "not"
+      ]
+    },
+    {
+      "code": "varsubsetneq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nsupseteqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "subsetneqq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!<=",
+        "sub",
+        "not"
+      ]
+    },
+    {
+      "code": "varsubsetneqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "sqsubset",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Supset",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varsupsetneq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "sqsupset",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "supseteqq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        ">=",
+        "super"
+      ]
+    },
+    {
+      "code": "varsupsetneqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Subset",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "supsetneq",
+      "package": 1,
+      "keywords": [
+        "equal",
+        "!>=",
+        "super",
+        "not"
+      ]
+    }
+  ],
+  [
+    {
+      "code": "geq",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "gg",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "leq",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ll",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "neq",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "eqslantgtr",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtrdot",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lesseqgtr",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ngeq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "eqslantless",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtreqless",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lesseqqgtr",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ngeqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "geqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtreqqless",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lessgtr",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ngeqslant",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "geqslant",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtrless",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lesssim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ngtr",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "ggg",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtrsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lll",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nleq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gnapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gvertneqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lnapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nleqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gneq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "leqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lneq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nleqslant",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gneqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "leqslant",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lneqq",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nless",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gnsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lessapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lnsim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gtrapprox",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lessdot",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lvertneqq",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "Downarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "nwarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "downarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Rightarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "searrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "leadsto",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "longmapsto",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "swarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "uparrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Leftarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Uparrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "mapsto",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "updownarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "nearrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Updownarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Rsh",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "downdownarrows",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Lsh",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "upuparrows",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [],
+  [
+    {
+      "code": "arccos",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "cos",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "csc",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "exp",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ker",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "limsup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "min",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sinh",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "arcsin",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "cosh",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "deg",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "gcd",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lg",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ln",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Pr",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "arctan",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "cot",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "det",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "hom",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lim",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "log",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sec",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "tan",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "arg",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "coth",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "dim",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "inf",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "liminf",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "max",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sin",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "tanh",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bmod",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "injlim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varinjlim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varlimsup",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "projlim",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varliminf",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varprojlim",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "alpha",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "theta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "tau",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "beta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "vartheta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "pi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "upsilon",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "gamma",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "iota",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "varpi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "phi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "delta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "kappa",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rho",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "varphi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "epsilon",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lambda",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "varrho",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "chi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "varepsilon",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "mu",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sigma",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "psi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "zeta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "nu",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "varsigma",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "omega",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "eta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "xi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Gamma",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Lambda",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Sigma",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Psi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Delta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Xi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Upsilon",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Omega",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Theta",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Pi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Phi",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "digamma",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "varkappa",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "beth",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "gimel",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "daleth",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "aleph",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "bot",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "forall",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "imath",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ni",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "top",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ell",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "hbar",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "in",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "partial",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "wp",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "exists",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Im",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "jmath",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Re",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Bbbk",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "complement",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "hbar",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circledR",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Finv",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "hslash",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "circledS",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Game",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "nexists",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "ulcorner",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "urcorner",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "llcorner",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lrcorner",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "downarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Downarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "langle",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rangle",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "|",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lceil",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rceil",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "uparrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Uparrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lfloor",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rfloor",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "updownarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Updownarrow",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "{",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "backslash",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "vert",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Vert",
+      "package": 0,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "lmoustache",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rmoustache",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lgroup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "rgroup",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "arrowvert",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "Arrowvert",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bracevert",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "lvert",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "rvert",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "lVert",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "rVert",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "vert",
+      "package": 1,
+      "keywords": []
+    },
+    {
+      "code": "Vert",
+      "package": 1,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "acute{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "check{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "grave{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "tilde{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "bar{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "ddot{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "hat{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "vec{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "breve{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "dot{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "mathring{a}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "imath",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "jmath",
+      "package": 0,
+      "keywords": []
+    }
+  ],
+  [
+    {
+      "code": "widetilde{abc}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "widehat{abc}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "underline{abc}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "overbrace{abc}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "underbrace{abc}",
+      "package": 0,
+      "keywords": []
+    },
+    {
+      "code": "sqrt{abc}",
+      "package": 0,
+      "keywords": []
+    }
+  ]
+]
