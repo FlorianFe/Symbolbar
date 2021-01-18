@@ -6,7 +6,7 @@ const { globalShortcut, nativeTheme } = require('electron')
 nativeTheme.on("updated", () => 
 {
   const isDark = nativeTheme.shouldUseDarkColors || false
-  const trayIcon = path.resolve(`./build/icon${isDark ? "_dark" : ""}.png`)
+  const trayIcon = path.resolve(`./img/icons/icon${isDark ? "_dark" : ""}.png`)
 
   mb.tray.setImage(trayIcon)
 });
@@ -17,7 +17,7 @@ const mb = menubar(
 {
   dir: './public',
   preloadWindow: true,
-  icon: `./build/icon${isDark ? "_dark" : ""}.png`,
+  icon: `./img/icons/icon${isDark ? "_dark" : ""}.png`,
   browserWindow: 
   {
     minWidth: 360,
