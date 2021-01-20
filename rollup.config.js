@@ -3,7 +3,6 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
-import typescript from 'rollup-plugin-typescript2'
 import {sass} from 'svelte-preprocess-sass'
 import postcss from "rollup-plugin-postcss"
 import json from 'rollup-plugin-json';
@@ -44,8 +43,6 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-
-		typescript({ sourceMap: !production }),
 
 		postcss({
 			extensions: ['.scss', '.sass'],
