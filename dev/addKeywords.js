@@ -1,41 +1,155 @@
 
 const keywordList = 
 {
-    sum: ['addition', '+'],
+    sum:
+    {
+        text: ['addition'],
+        math: ['+']
+    },
 
     /* plus */
-    oplus: ['addition', '+'],
-    uplus: ['addition', '+'],
-    boxplus: ['addition', '+'],
-    dotplus: ['addition', '+'],
-    bigoplus: ['addition', '+'],
-    biguplus: ['addition', '+'],
+    oplus: 
+    {
+        text: ['addition'],
+        math: ['+']
+    },
+    uplus: 
+    {
+        text: ['addition', 'u'],
+        math: ['+']
+    },
+    boxplus: 
+    {
+        text: ['addition', 'box'],
+        math: ['+']
+    },
+    dotplus: 
+    {
+        text: ['addition', 'dot'],
+        math: ['+']
+    },
+    bigoplus: 
+    {
+        text: ['addition', 'O'],
+        math: ['+']
+    },
+    biguplus: 
+    {
+        text: ['addition', 'U'],
+        math: ['+']
+    },
 
     /* minus */
-    setminus: ['subtraction', '-'],
-    ominus: ['subtraction', '-'],
-    boxminus: ['subtraction', '-'],
-    smallsetminus: ['subtraction', '-'],
+    setminus: 
+    {
+        text: ['subtraction'],
+        math: ['-']
+    },
+    ominus: 
+    {
+        text: ['subtraction', 'o'],
+        math: ['-']
+    },
+    boxminus: 
+    {
+        text: ['subtraction', 'box'],
+        math: ['-']
+    },
+    smallsetminus: 
+    {
+        text: ['subtraction', 'small', 'set'],
+        math: ['-']
+    },
 
     /* equal */
-    equiv: ['equal', '='],
-    preceq: ['equal', '=', '<='],
-    succeq: ['equal', '=', '>='],
-    doteq: ['equal', '='],
-    simeq: ['equal', '=', 'similar'],
-    approxeq: ['equal', '=', 'approximately'],
-    eqcirc: ['equal', '=', 'circle'],
-    fallingdotseq: ['equal', '='],
-    succcurlyeq: ['equal', '=', '>='],
-    backsimeq: ['equal', '=', 'similar'],
-    preccurlyeq: ['equal', '=', '<='],
-    Bumpeq: ['equal', '='],
-    risingdotseq: ['equal', '='],
-    circeq: ['equal', '=', 'circle'],
-    curlyeqsucc: ['equal', '=', '>='],
-    curlypreceq: ['equal', '=', '<='],
-    doteqdot: ['eqal', '='],
+    equiv: 
+    {
+        text: ['equal'],
+        math: ['=']
+    },
+    preceq: 
+    {
+        text: ['equal', 'predecessor'],
+        math: ['=', '<=']
+    },
+    succeq: 
+    {
+        text: ['equal', 'successor'],
+        math: ['=', '>=']
+    },
+    doteq: 
+    {
+        text: ['equal', 'dot'],
+        math: ['=']
+    },
+    simeq: 
+    {
+        text: ['equal', 'similar'],
+        math: ['=']
+    },
+    approxeq: 
+    {
+        text: ['equal', 'approximately'],
+        math: ['=']
+    },
+    eqcirc: 
+    {
+        text: ['equal', 'circle'],
+        math: ['=']
+    },
+    fallingdotseq: 
+    {
+        text: ['equal', 'falling', 'dots'],
+        math: ['=']
+    },
+    succcurlyeq: 
+    {
+        text: ['equal', 'successor', 'curly'],
+        math: ['=']
+    },
+    backsimeq: 
+    {
+        text: ['equal', 'back', 'similar'],
+        math: ['=']
+    },
+    preccurlyeq: 
+    {
+        text: ['equal', 'predecessor', 'curly'],
+        math: ['=', '<=']
+    },
+    Bumpeq: 
+    {
+        text: ['equal', 'bump'],
+        math: ['=']
+    },
+    risingdotseq: 
+    {
+        text: ['equal', 'rising', 'dots'],
+        math: ['=']
+    },
+    circeq: 
+    {
+        text: ['equal', 'circle'],
+        math: ['=']
+    },
+    curlyeqsucc: 
+    {
+        text: ['equal', 'successor', 'curly'],
+        math: ['=', '>=']
+    },
+    curlypreceq: 
+    {
+        text: ['equal', 'predecessor', 'curly'],
+        math: ['=', '>=']
+    },
+    doteqdot: 
+    {
+        text: ['equal'],
+        math: ['=']
+    },
 
+    /* equal for sets */
+    /*
     sqsupseteq : ['equal', '>=', 'super', 'square'],
     sqsubseteq : ['equal', '<=', 'sub', 'square'],
     supseteq : ['equal', '>=', 'super'],
@@ -48,16 +162,41 @@ const keywordList =
     subsetneqq : ['equal', '!<=', 'sub', 'not'],
     supsetneq : ['equal', '!>=', 'super', 'not'],
     subsetneq : ['equal', '!<=', 'sub', 'not'],
-    nsupseteq : ['equal', '!>=', 'super', 'not'],
-    nsubseteq : ['equal', '!<=', 'sub', 'not'],
+    */
 
     /* TODO  inequalities for 'equal' */
+    geq :
+    {
+        text: ['greater', 'equal'],
+        math: ['>=']
+    },
+    gg : {
+        text: ['greater'],
+        math: ['>']
+    },
+    leq : 
+    {
+        text: ['less', 'equal'],
+        math: ['<=']
+    },
+    ll : 
+    {
+        text: ['less'],
+        math: ['<']
+    },
+    neq : 
+    {
+        text: ['greater', 'equal'],
+        math: ['=/=', '=|=']
+    }
 }
 
 const addKeywords = (categories) => 
 {
     return categories.map((symbols) => 
     {
+        let counter = 0
+
         return symbols.map((symbol) => 
         {
             if(Object.keys(keywordList).indexOf(symbol.code) > -1)
@@ -66,8 +205,11 @@ const addKeywords = (categories) =>
             }
             else
             {
-                symbol.keywords = [] 
+                symbol.keywords = { text: [], math: [] }
             }
+
+            symbol.id = counter
+            counter ++
 
             return symbol
         })

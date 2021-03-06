@@ -38070,6 +38070,1441 @@ var app = (function () {
 
     var TeXToSVG_1 = TeXToSVG;
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __values(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    }
+
+    function __read(o, n) {
+        var m = typeof Symbol === "function" && o[Symbol.iterator];
+        if (!m) return o;
+        var i = m.call(o), r, ar = [], e;
+        try {
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+        }
+        catch (error) { e = { error: error }; }
+        finally {
+            try {
+                if (r && !r.done && (m = i["return"])) m.call(i);
+            }
+            finally { if (e) throw e.error; }
+        }
+        return ar;
+    }
+
+    function __spread() {
+        for (var ar = [], i = 0; i < arguments.length; i++)
+            ar = ar.concat(__read(arguments[i]));
+        return ar;
+    }
+
+    /** @ignore */
+    var ENTRIES = 'ENTRIES';
+    /** @ignore */
+    var KEYS = 'KEYS';
+    /** @ignore */
+    var VALUES = 'VALUES';
+    /** @ignore */
+    var LEAF = '';
+    /**
+     * @private
+     */
+    var TreeIterator = /** @class */ (function () {
+        function TreeIterator(set, type) {
+            var node = set._tree;
+            var keys = Object.keys(node);
+            this.set = set;
+            this._type = type;
+            this._path = keys.length > 0 ? [{ node: node, keys: keys }] : [];
+        }
+        TreeIterator.prototype.next = function () {
+            var value = this.dive();
+            this.backtrack();
+            return value;
+        };
+        TreeIterator.prototype.dive = function () {
+            if (this._path.length === 0) {
+                return { done: true, value: undefined };
+            }
+            var _a = last(this._path), node = _a.node, keys = _a.keys;
+            if (last(keys) === LEAF) {
+                return { done: false, value: this.result() };
+            }
+            this._path.push({ node: node[last(keys)], keys: Object.keys(node[last(keys)]) });
+            return this.dive();
+        };
+        TreeIterator.prototype.backtrack = function () {
+            if (this._path.length === 0) {
+                return;
+            }
+            last(this._path).keys.pop();
+            if (last(this._path).keys.length > 0) {
+                return;
+            }
+            this._path.pop();
+            this.backtrack();
+        };
+        TreeIterator.prototype.key = function () {
+            return this.set._prefix + this._path
+                .map(function (_a) {
+                var keys = _a.keys;
+                return last(keys);
+            })
+                .filter(function (key) { return key !== LEAF; })
+                .join('');
+        };
+        TreeIterator.prototype.value = function () {
+            return last(this._path).node[LEAF];
+        };
+        TreeIterator.prototype.result = function () {
+            if (this._type === VALUES) {
+                return this.value();
+            }
+            if (this._type === KEYS) {
+                return this.key();
+            }
+            return [this.key(), this.value()];
+        };
+        TreeIterator.prototype[Symbol.iterator] = function () {
+            return this;
+        };
+        return TreeIterator;
+    }());
+    var last = function (array) {
+        return array[array.length - 1];
+    };
+
+    var NONE = 0;
+    var CHANGE = 1;
+    var ADD = 2;
+    var DELETE = 3;
+    /**
+     * @ignore
+     */
+    var fuzzySearch = function (node, query, maxDistance) {
+        var stack = [{ distance: 0, i: 0, key: '', node: node }];
+        var results = {};
+        var innerStack = [];
+        var _loop_1 = function () {
+            var _a = stack.pop(), node_1 = _a.node, distance = _a.distance, key = _a.key, i = _a.i, edit = _a.edit;
+            Object.keys(node_1).forEach(function (k) {
+                if (k === LEAF) {
+                    var totDistance = distance + (query.length - i);
+                    var _a = __read(results[key] || [null, Infinity], 2), d = _a[1];
+                    if (totDistance <= maxDistance && totDistance < d) {
+                        results[key] = [node_1[k], totDistance];
+                    }
+                }
+                else {
+                    withinDistance(query, k, maxDistance - distance, i, edit, innerStack).forEach(function (_a) {
+                        var d = _a.distance, i = _a.i, edit = _a.edit;
+                        stack.push({ node: node_1[k], distance: distance + d, key: key + k, i: i, edit: edit });
+                    });
+                }
+            });
+        };
+        while (stack.length > 0) {
+            _loop_1();
+        }
+        return results;
+    };
+    /**
+     * @ignore
+     */
+    var withinDistance = function (a, b, maxDistance, i, edit, stack) {
+        stack.push({ distance: 0, ia: i, ib: 0, edit: edit });
+        var results = [];
+        while (stack.length > 0) {
+            var _a = stack.pop(), distance = _a.distance, ia = _a.ia, ib = _a.ib, edit_1 = _a.edit;
+            if (ib === b.length) {
+                results.push({ distance: distance, i: ia, edit: edit_1 });
+                continue;
+            }
+            if (a[ia] === b[ib]) {
+                stack.push({ distance: distance, ia: ia + 1, ib: ib + 1, edit: NONE });
+            }
+            else {
+                if (distance >= maxDistance) {
+                    continue;
+                }
+                if (edit_1 !== ADD) {
+                    stack.push({ distance: distance + 1, ia: ia, ib: ib + 1, edit: DELETE });
+                }
+                if (ia < a.length) {
+                    if (edit_1 !== DELETE) {
+                        stack.push({ distance: distance + 1, ia: ia + 1, ib: ib, edit: ADD });
+                    }
+                    if (edit_1 !== DELETE && edit_1 !== ADD) {
+                        stack.push({ distance: distance + 1, ia: ia + 1, ib: ib + 1, edit: CHANGE });
+                    }
+                }
+            }
+        }
+        return results;
+    };
+
+    /**
+     * A class implementing the same interface as a standard JavaScript
+     * [`Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+     * with string keys, but adding support for efficiently searching entries with
+     * prefix or fuzzy search. This class is used internally by [[MiniSearch]] as
+     * the inverted index data structure. The implementation is a radix tree
+     * (compressed prefix tree).
+     *
+     * Since this class can be of general utility beyond _MiniSearch_, it is
+     * exported by the `minisearch` package and can be imported (or required) as
+     * `minisearch/SearchableMap`.
+     *
+     * @typeParam T  The type of the values stored in the map.
+     */
+    var SearchableMap = /** @class */ (function () {
+        /**
+         * The constructor is normally called without arguments, creating an empty
+         * map. In order to create a [[SearchableMap]] from an iterable or from an
+         * object, check [[SearchableMap.from]] and [[SearchableMap.fromObject]].
+         *
+         * The constructor arguments are for internal use, when creating derived
+         * mutable views of a map at a prefix.
+         */
+        function SearchableMap(tree, prefix) {
+            if (tree === void 0) { tree = {}; }
+            if (prefix === void 0) { prefix = ''; }
+            this._tree = tree;
+            this._prefix = prefix;
+        }
+        /**
+         * Creates and returns a mutable view of this [[SearchableMap]], containing only
+         * entries that share the given prefix.
+         *
+         * ### Usage:
+         *
+         * ```javascript
+         * let map = new SearchableMap()
+         * map.set("unicorn", 1)
+         * map.set("universe", 2)
+         * map.set("university", 3)
+         * map.set("unique", 4)
+         * map.set("hello", 5)
+         *
+         * let uni = map.atPrefix("uni")
+         * uni.get("unique") // => 4
+         * uni.get("unicorn") // => 1
+         * uni.get("hello") // => undefined
+         *
+         * let univer = map.atPrefix("univer")
+         * univer.get("unique") // => undefined
+         * univer.get("universe") // => 2
+         * univer.get("university") // => 3
+         * ```
+         *
+         * @param prefix  The prefix
+         * @return A [[SearchableMap]] representing a mutable view of the original Map at the given prefix
+         */
+        SearchableMap.prototype.atPrefix = function (prefix) {
+            var _a;
+            if (!prefix.startsWith(this._prefix)) {
+                throw new Error('Mismatched prefix');
+            }
+            var _b = __read(trackDown(this._tree, prefix.slice(this._prefix.length)), 2), node = _b[0], path = _b[1];
+            if (node === undefined) {
+                var _c = __read(last$1(path), 2), parentNode = _c[0], key_1 = _c[1];
+                var nodeKey = Object.keys(parentNode).find(function (k) { return k !== LEAF && k.startsWith(key_1); });
+                if (nodeKey !== undefined) {
+                    return new SearchableMap((_a = {}, _a[nodeKey.slice(key_1.length)] = parentNode[nodeKey], _a), prefix);
+                }
+            }
+            return new SearchableMap(node || {}, prefix);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/clear
+         */
+        SearchableMap.prototype.clear = function () {
+            delete this._size;
+            this._tree = {};
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/delete
+         * @param key  Key to delete
+         */
+        SearchableMap.prototype.delete = function (key) {
+            delete this._size;
+            return remove(this._tree, key);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/entries
+         * @return An iterator iterating through `[key, value]` entries.
+         */
+        SearchableMap.prototype.entries = function () {
+            return new TreeIterator(this, ENTRIES);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach
+         * @param fn  Iteration function
+         */
+        SearchableMap.prototype.forEach = function (fn) {
+            var e_1, _a;
+            try {
+                for (var _b = __values(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var _d = __read(_c.value, 2), key = _d[0], value = _d[1];
+                    fn(key, value, this);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+        };
+        /**
+         * Returns a key-value object of all the entries that have a key within the
+         * given edit distance from the search key. The keys of the returned object are
+         * the matching keys, while the values are two-elements arrays where the first
+         * element is the value associated to the key, and the second is the edit
+         * distance of the key to the search key.
+         *
+         * ### Usage:
+         *
+         * ```javascript
+         * let map = new SearchableMap()
+         * map.set('hello', 'world')
+         * map.set('hell', 'yeah')
+         * map.set('ciao', 'mondo')
+         *
+         * // Get all entries that match the key 'hallo' with a maximum edit distance of 2
+         * map.fuzzyGet('hallo', 2)
+         * // => { "hello": ["world", 1], "hell": ["yeah", 2] }
+         *
+         * // In the example, the "hello" key has value "world" and edit distance of 1
+         * // (change "e" to "a"), the key "hell" has value "yeah" and edit distance of 2
+         * // (change "e" to "a", delete "o")
+         * ```
+         *
+         * @param key  The search key
+         * @param maxEditDistance  The maximum edit distance (Levenshtein)
+         * @return A key-value object of the matching keys to their value and edit distance
+         */
+        SearchableMap.prototype.fuzzyGet = function (key, maxEditDistance) {
+            return fuzzySearch(this._tree, key, maxEditDistance);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/get
+         * @param key  Key to get
+         * @return Value associated to the key, or `undefined` if the key is not
+         * found.
+         */
+        SearchableMap.prototype.get = function (key) {
+            var node = lookup(this._tree, key);
+            return node !== undefined ? node[LEAF] : undefined;
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has
+         * @param key  Key
+         * @return True if the key is in the map, false otherwise
+         */
+        SearchableMap.prototype.has = function (key) {
+            var node = lookup(this._tree, key);
+            return node !== undefined && node.hasOwnProperty(LEAF);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/keys
+         * @return An `Iterable` iterating through keys
+         */
+        SearchableMap.prototype.keys = function () {
+            return new TreeIterator(this, KEYS);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/set
+         * @param key  Key to set
+         * @param value  Value to associate to the key
+         * @return The [[SearchableMap]] itself, to allow chaining
+         */
+        SearchableMap.prototype.set = function (key, value) {
+            if (typeof key !== 'string') {
+                throw new Error('key must be a string');
+            }
+            delete this._size;
+            var node = createPath(this._tree, key);
+            node[LEAF] = value;
+            return this;
+        };
+        Object.defineProperty(SearchableMap.prototype, "size", {
+            /**
+             * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/size
+             */
+            get: function () {
+                var _this = this;
+                if (this._size) {
+                    return this._size;
+                }
+                /** @ignore */
+                this._size = 0;
+                this.forEach(function () { _this._size += 1; });
+                return this._size;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Updates the value at the given key using the provided function. The function
+         * is called with the current value at the key, and its return value is used as
+         * the new value to be set.
+         *
+         * ### Example:
+         *
+         * ```javascript
+         * // Increment the current value by one
+         * searchableMap.update('somekey', (currentValue) => currentValue == null ? 0 : currentValue + 1)
+         * ```
+         *
+         * @param key  The key to update
+         * @param fn  The function used to compute the new value from the current one
+         * @return The [[SearchableMap]] itself, to allow chaining
+         */
+        SearchableMap.prototype.update = function (key, fn) {
+            if (typeof key !== 'string') {
+                throw new Error('key must be a string');
+            }
+            delete this._size;
+            var node = createPath(this._tree, key);
+            node[LEAF] = fn(node[LEAF]);
+            return this;
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values
+         * @return An `Iterable` iterating through values.
+         */
+        SearchableMap.prototype.values = function () {
+            return new TreeIterator(this, VALUES);
+        };
+        /**
+         * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/@@iterator
+         */
+        SearchableMap.prototype[Symbol.iterator] = function () {
+            return this.entries();
+        };
+        /**
+         * Creates a [[SearchableMap]] from an `Iterable` of entries
+         *
+         * @param entries  Entries to be inserted in the [[SearchableMap]]
+         * @return A new [[SearchableMap]] with the given entries
+         */
+        SearchableMap.from = function (entries) {
+            var e_2, _a;
+            var tree = new SearchableMap();
+            try {
+                for (var entries_1 = __values(entries), entries_1_1 = entries_1.next(); !entries_1_1.done; entries_1_1 = entries_1.next()) {
+                    var _b = __read(entries_1_1.value, 2), key = _b[0], value = _b[1];
+                    tree.set(key, value);
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (entries_1_1 && !entries_1_1.done && (_a = entries_1.return)) _a.call(entries_1);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            return tree;
+        };
+        /**
+         * Creates a [[SearchableMap]] from the iterable properties of a JavaScript object
+         *
+         * @param object  Object of entries for the [[SearchableMap]]
+         * @return A new [[SearchableMap]] with the given entries
+         */
+        SearchableMap.fromObject = function (object) {
+            return SearchableMap.from(Object.entries(object));
+        };
+        return SearchableMap;
+    }());
+    var trackDown = function (tree, key, path) {
+        if (path === void 0) { path = []; }
+        if (key.length === 0 || tree == null) {
+            return [tree, path];
+        }
+        var nodeKey = Object.keys(tree).find(function (k) { return k !== LEAF && key.startsWith(k); });
+        if (nodeKey === undefined) {
+            path.push([tree, key]); // performance: update in place
+            return trackDown(undefined, '', path);
+        }
+        path.push([tree, nodeKey]); // performance: update in place
+        return trackDown(tree[nodeKey], key.slice(nodeKey.length), path);
+    };
+    var lookup = function (tree, key) {
+        if (key.length === 0 || tree == null) {
+            return tree;
+        }
+        var nodeKey = Object.keys(tree).find(function (k) { return k !== LEAF && key.startsWith(k); });
+        if (nodeKey === undefined) {
+            return undefined;
+        }
+        return lookup(tree[nodeKey], key.slice(nodeKey.length));
+    };
+    var createPath = function (tree, key) {
+        var _a;
+        if (key.length === 0 || tree == null) {
+            return tree;
+        }
+        var nodeKey = Object.keys(tree).find(function (k) { return k !== LEAF && key.startsWith(k); });
+        if (nodeKey === undefined) {
+            var toSplit = Object.keys(tree).find(function (k) { return k !== LEAF && k.startsWith(key[0]); });
+            if (toSplit === undefined) {
+                tree[key] = {};
+            }
+            else {
+                var prefix = commonPrefix(key, toSplit);
+                tree[prefix] = (_a = {}, _a[toSplit.slice(prefix.length)] = tree[toSplit], _a);
+                delete tree[toSplit];
+                return createPath(tree[prefix], key.slice(prefix.length));
+            }
+            return tree[key];
+        }
+        return createPath(tree[nodeKey], key.slice(nodeKey.length));
+    };
+    var commonPrefix = function (a, b, i, length, prefix) {
+        if (i === void 0) { i = 0; }
+        if (length === void 0) { length = Math.min(a.length, b.length); }
+        if (prefix === void 0) { prefix = ''; }
+        if (i >= length) {
+            return prefix;
+        }
+        if (a[i] !== b[i]) {
+            return prefix;
+        }
+        return commonPrefix(a, b, i + 1, length, prefix + a[i]);
+    };
+    var remove = function (tree, key) {
+        var _a = __read(trackDown(tree, key), 2), node = _a[0], path = _a[1];
+        if (node === undefined) {
+            return;
+        }
+        delete node[LEAF];
+        var keys = Object.keys(node);
+        if (keys.length === 0) {
+            cleanup(path);
+        }
+        if (keys.length === 1) {
+            merge(path, keys[0], node[keys[0]]);
+        }
+    };
+    var cleanup = function (path) {
+        if (path.length === 0) {
+            return;
+        }
+        var _a = __read(last$1(path), 2), node = _a[0], key = _a[1];
+        delete node[key];
+        if (Object.keys(node).length === 0) {
+            cleanup(path.slice(0, -1));
+        }
+    };
+    var merge = function (path, key, value) {
+        if (path.length === 0) {
+            return;
+        }
+        var _a = __read(last$1(path), 2), node = _a[0], nodeKey = _a[1];
+        node[nodeKey + key] = value;
+        delete node[nodeKey];
+    };
+    var last$1 = function (array) {
+        return array[array.length - 1];
+    };
+
+    var _a;
+    var OR = 'or';
+    var AND = 'and';
+    /**
+     * [[MiniSearch]] is the main entrypoint class, implementing a full-text search
+     * engine in memory.
+     *
+     * @typeParam T  The type of the documents being indexed.
+     *
+     * ### Basic example:
+     *
+     * ```javascript
+     * const documents = [
+     *   {
+     *     id: 1,
+     *     title: 'Moby Dick',
+     *     text: 'Call me Ishmael. Some years ago...',
+     *     category: 'fiction'
+     *   },
+     *   {
+     *     id: 2,
+     *     title: 'Zen and the Art of Motorcycle Maintenance',
+     *     text: 'I can see by my watch...',
+     *     category: 'fiction'
+     *   },
+     *   {
+     *     id: 3,
+     *     title: 'Neuromancer',
+     *     text: 'The sky above the port was...',
+     *     category: 'fiction'
+     *   },
+     *   {
+     *     id: 4,
+     *     title: 'Zen and the Art of Archery',
+     *     text: 'At first sight it must seem...',
+     *     category: 'non-fiction'
+     *   },
+     *   // ...and more
+     * ]
+     *
+     * // Create a search engine that indexes the 'title' and 'text' fields for
+     * // full-text search. Search results will include 'title' and 'category' (plus the
+     * // id field, that is always stored and returned)
+     * const miniSearch = new MiniSearch({
+     *   fields: ['title', 'text'],
+     *   storeFields: ['title', 'category']
+     * })
+     *
+     * // Add documents to the index
+     * miniSearch.addAll(documents)
+     *
+     * // Search for documents:
+     * let results = miniSearch.search('zen art motorcycle')
+     * // => [
+     * //   { id: 2, title: 'Zen and the Art of Motorcycle Maintenance', category: 'fiction', score: 2.77258 },
+     * //   { id: 4, title: 'Zen and the Art of Archery', category: 'non-fiction', score: 1.38629 }
+     * // ]
+     * ```
+     */
+    var MiniSearch = /** @class */ (function () {
+        /**
+         * @param options  Configuration options
+         *
+         * ### Examples:
+         *
+         * ```javascript
+         * // Create a search engine that indexes the 'title' and 'text' fields of your
+         * // documents:
+         * const miniSearch = new MiniSearch({ fields: ['title', 'text'] })
+         * ```
+         *
+         * ### ID Field:
+         *
+         * ```javascript
+         * // Your documents are assumed to include a unique 'id' field, but if you want
+         * // to use a different field for document identification, you can set the
+         * // 'idField' option:
+         * const miniSearch = new MiniSearch({ idField: 'key', fields: ['title', 'text'] })
+         * ```
+         *
+         * ### Options and defaults:
+         *
+         * ```javascript
+         * // The full set of options (here with their default value) is:
+         * const miniSearch = new MiniSearch({
+         *   // idField: field that uniquely identifies a document
+         *   idField: 'id',
+         *
+         *   // extractField: function used to get the value of a field in a document.
+         *   // By default, it assumes the document is a flat object with field names as
+         *   // property keys and field values as string property values, but custom logic
+         *   // can be implemented by setting this option to a custom extractor function.
+         *   extractField: (document, fieldName) => document[fieldName],
+         *
+         *   // tokenize: function used to split fields into individual terms. By
+         *   // default, it is also used to tokenize search queries, unless a specific
+         *   // `tokenize` search option is supplied. When tokenizing an indexed field,
+         *   // the field name is passed as the second argument.
+         *   tokenize: (string, _fieldName) => string.split(SPACE_OR_PUNCTUATION),
+         *
+         *   // processTerm: function used to process each tokenized term before
+         *   // indexing. It can be used for stemming and normalization. Return a falsy
+         *   // value in order to discard a term. By default, it is also used to process
+         *   // search queries, unless a specific `processTerm` option is supplied as a
+         *   // search option. When processing a term from a indexed field, the field
+         *   // name is passed as the second argument.
+         *   processTerm: (term, _fieldName) => term.toLowerCase(),
+         *
+         *   // searchOptions: default search options, see the `search` method for
+         *   // details
+         *   searchOptions: undefined,
+         *
+         *   // fields: document fields to be indexed. Mandatory, but not set by default
+         *   fields: undefined
+         *
+         *   // storeFields: document fields to be stored and returned as part of the
+         *   // search results.
+         *   storeFields: []
+         * })
+         * ```
+         */
+        function MiniSearch(options) {
+            if ((options === null || options === void 0 ? void 0 : options.fields) == null) {
+                throw new Error('MiniSearch: option "fields" must be provided');
+            }
+            this._options = __assign(__assign(__assign({}, defaultOptions), options), { searchOptions: __assign(__assign({}, defaultSearchOptions), (options.searchOptions || {})) });
+            this._index = new SearchableMap();
+            this._documentCount = 0;
+            this._documentIds = {};
+            this._fieldIds = {};
+            this._fieldLength = {};
+            this._averageFieldLength = {};
+            this._nextId = 0;
+            this._storedFields = {};
+            this.addFields(this._options.fields);
+        }
+        /**
+         * Adds a document to the index
+         *
+         * @param document  The document to be indexed
+         */
+        MiniSearch.prototype.add = function (document) {
+            var _this = this;
+            var _a = this._options, extractField = _a.extractField, tokenize = _a.tokenize, processTerm = _a.processTerm, fields = _a.fields, idField = _a.idField;
+            var id = extractField(document, idField);
+            if (id == null) {
+                throw new Error("MiniSearch: document does not have ID field \"" + idField + "\"");
+            }
+            var shortDocumentId = this.addDocumentId(id);
+            this.saveStoredFields(shortDocumentId, document);
+            fields.forEach(function (field) {
+                var fieldValue = extractField(document, field);
+                if (fieldValue == null) {
+                    return;
+                }
+                var tokens = tokenize(fieldValue.toString(), field);
+                _this.addFieldLength(shortDocumentId, _this._fieldIds[field], _this.documentCount - 1, tokens.length);
+                tokens.forEach(function (term) {
+                    var processedTerm = processTerm(term, field);
+                    if (processedTerm) {
+                        _this.addTerm(_this._fieldIds[field], shortDocumentId, processedTerm);
+                    }
+                });
+            });
+        };
+        /**
+         * Adds all the given documents to the index
+         *
+         * @param documents  An array of documents to be indexed
+         */
+        MiniSearch.prototype.addAll = function (documents) {
+            var _this = this;
+            documents.forEach(function (document) { return _this.add(document); });
+        };
+        /**
+         * Adds all the given documents to the index asynchronously.
+         *
+         * Returns a promise that resolves (to `undefined`) when the indexing is done.
+         * This method is useful when index many documents, to avoid blocking the main
+         * thread. The indexing is performed asynchronously and in chunks.
+         *
+         * @param documents  An array of documents to be indexed
+         * @param options  Configuration options
+         * @return A promise resolving to `undefined` when the indexing is done
+         */
+        MiniSearch.prototype.addAllAsync = function (documents, options) {
+            var _this = this;
+            if (options === void 0) { options = {}; }
+            var _a = options.chunkSize, chunkSize = _a === void 0 ? 10 : _a;
+            var acc = { chunk: [], promise: Promise.resolve() };
+            var _b = documents.reduce(function (_a, document, i) {
+                var chunk = _a.chunk, promise = _a.promise;
+                chunk.push(document);
+                if ((i + 1) % chunkSize === 0) {
+                    return {
+                        chunk: [],
+                        promise: promise
+                            .then(function () { return new Promise(function (resolve) { return setTimeout(resolve, 0); }); })
+                            .then(function () { return _this.addAll(chunk); })
+                    };
+                }
+                else {
+                    return { chunk: chunk, promise: promise };
+                }
+            }, acc), chunk = _b.chunk, promise = _b.promise;
+            return promise.then(function () { return _this.addAll(chunk); });
+        };
+        /**
+         * Removes the given document from the index.
+         *
+         * The document to delete must NOT have changed between indexing and deletion,
+         * otherwise the index will be corrupted. Therefore, when reindexing a document
+         * after a change, the correct order of operations is:
+         *
+         *   1. remove old version
+         *   2. apply changes
+         *   3. index new version
+         *
+         * @param document  The document to be removed
+         */
+        MiniSearch.prototype.remove = function (document) {
+            var _this = this;
+            var _a = this._options, tokenize = _a.tokenize, processTerm = _a.processTerm, extractField = _a.extractField, fields = _a.fields, idField = _a.idField;
+            var id = extractField(document, idField);
+            if (id == null) {
+                throw new Error("MiniSearch: document does not have ID field \"" + idField + "\"");
+            }
+            var _b = __read(Object.entries(this._documentIds)
+                .find(function (_a) {
+                var _b = __read(_a, 2), _ = _b[0], longId = _b[1];
+                return id === longId;
+            }) || [], 1), shortDocumentId = _b[0];
+            if (shortDocumentId == null) {
+                throw new Error("MiniSearch: cannot remove document with ID " + id + ": it is not in the index");
+            }
+            fields.forEach(function (field) {
+                var fieldValue = extractField(document, field);
+                if (fieldValue == null) {
+                    return;
+                }
+                var tokens = tokenize(fieldValue.toString(), field);
+                tokens.forEach(function (term) {
+                    var processedTerm = processTerm(term, field);
+                    if (processedTerm) {
+                        _this.removeTerm(_this._fieldIds[field], shortDocumentId, processedTerm);
+                    }
+                });
+            });
+            delete this._storedFields[shortDocumentId];
+            delete this._documentIds[shortDocumentId];
+            this._documentCount -= 1;
+        };
+        /**
+         * Removes all the given documents from the index. If called with no arguments,
+         * it removes _all_ documents from the index.
+         *
+         * @param documents  The documents to be removed. If this argument is omitted,
+         * all documents are removed. Note that, for removing all documents, it is
+         * more efficient to call this method with no arguments than to pass all
+         * documents.
+         */
+        MiniSearch.prototype.removeAll = function (documents) {
+            var _this = this;
+            if (documents) {
+                documents.forEach(function (document) { return _this.remove(document); });
+            }
+            else if (arguments.length > 0) {
+                throw new Error('Expected documents to be present. Omit the argument to remove all documents.');
+            }
+            else {
+                this._index = new SearchableMap();
+                this._documentCount = 0;
+                this._documentIds = {};
+                this._fieldLength = {};
+                this._averageFieldLength = {};
+                this._storedFields = {};
+                this._nextId = 0;
+            }
+        };
+        /**
+         * Search for documents matching the given search query.
+         *
+         * The result is a list of scored document IDs matching the query, sorted by
+         * descending score, and each including data about which terms were matched and
+         * in which fields.
+         *
+         * ### Basic usage:
+         *
+         * ```javascript
+         * // Search for "zen art motorcycle" with default options: terms have to match
+         * // exactly, and individual terms are joined with OR
+         * miniSearch.search('zen art motorcycle')
+         * // => [ { id: 2, score: 2.77258, match: { ... } }, { id: 4, score: 1.38629, match: { ... } } ]
+         * ```
+         *
+         * ### Restrict search to specific fields:
+         *
+         * ```javascript
+         * // Search only in the 'title' field
+         * miniSearch.search('zen', { fields: ['title'] })
+         * ```
+         *
+         * ### Field boosting:
+         *
+         * ```javascript
+         * // Boost a field
+         * miniSearch.search('zen', { boost: { title: 2 } })
+         * ```
+         *
+         * ### Prefix search:
+         *
+         * ```javascript
+         * // Search for "moto" with prefix search (it will match documents
+         * // containing terms that start with "moto" or "neuro")
+         * miniSearch.search('moto neuro', { prefix: true })
+         * ```
+         *
+         * ### Fuzzy search:
+         *
+         * ```javascript
+         * // Search for "ismael" with fuzzy search (it will match documents containing
+         * // terms similar to "ismael", with a maximum edit distance of 0.2 term.length
+         * // (rounded to nearest integer)
+         * miniSearch.search('ismael', { fuzzy: 0.2 })
+         * ```
+         *
+         * ### Combining strategies:
+         *
+         * ```javascript
+         * // Mix of exact match, prefix search, and fuzzy search
+         * miniSearch.search('ismael mob', {
+         *  prefix: true,
+         *  fuzzy: 0.2
+         * })
+         * ```
+         *
+         * ### Advanced prefix and fuzzy search:
+         *
+         * ```javascript
+         * // Perform fuzzy and prefix search depending on the search term. Here
+         * // performing prefix and fuzzy search only on terms longer than 3 characters
+         * miniSearch.search('ismael mob', {
+         *  prefix: term => term.length > 3
+         *  fuzzy: term => term.length > 3 ? 0.2 : null
+         * })
+         * ```
+         *
+         * ### Combine with AND:
+         *
+         * ```javascript
+         * // Combine search terms with AND (to match only documents that contain both
+         * // "motorcycle" and "art")
+         * miniSearch.search('motorcycle art', { combineWith: 'AND' })
+         * ```
+         *
+         * ### Filtering results:
+         *
+         * ```javascript
+         * // Filter only results in the 'fiction' category (assuming that 'category'
+         * // is a stored field)
+         * miniSearch.search('motorcycle art', {
+         *   filter: (result) => result.category === 'fiction'
+         * })
+         * ```
+         *
+         * @param queryString  Query string to search for
+         * @param options  Search options. Each option, if not given, defaults to the corresponding value of `searchOptions` given to the constructor, or to the library default.
+         */
+        MiniSearch.prototype.search = function (queryString, searchOptions) {
+            var _this = this;
+            if (searchOptions === void 0) { searchOptions = {}; }
+            var _a = this._options, tokenize = _a.tokenize, processTerm = _a.processTerm, globalSearchOptions = _a.searchOptions;
+            var options = __assign(__assign({ tokenize: tokenize, processTerm: processTerm }, globalSearchOptions), searchOptions);
+            var searchTokenize = options.tokenize, searchProcessTerm = options.processTerm;
+            var terms = searchTokenize(queryString)
+                .map(function (term) { return searchProcessTerm(term); })
+                .filter(function (term) { return !!term; });
+            var queries = terms.map(termToQuery(options));
+            var results = queries.map(function (query) { return _this.executeQuery(query, options); });
+            var combinedResults = this.combineResults(results, options.combineWith);
+            return Object.entries(combinedResults)
+                .reduce(function (results, _a) {
+                var _b = __read(_a, 2), docId = _b[0], _c = _b[1], score = _c.score, match = _c.match, terms = _c.terms;
+                var result = {
+                    id: _this._documentIds[docId],
+                    terms: uniq(terms),
+                    score: score,
+                    match: match
+                };
+                Object.assign(result, _this._storedFields[docId]);
+                if (options.filter == null || options.filter(result)) {
+                    results.push(result);
+                }
+                return results;
+            }, [])
+                .sort(function (_a, _b) {
+                var a = _a.score;
+                var b = _b.score;
+                return a < b ? 1 : -1;
+            });
+        };
+        /**
+         * Provide suggestions for the given search query
+         *
+         * The result is a list of suggested modified search queries, derived from the
+         * given search query, each with a relevance score, sorted by descending score.
+         *
+         * ### Basic usage:
+         *
+         * ```javascript
+         * // Get suggestions for 'neuro':
+         * miniSearch.autoSuggest('neuro')
+         * // => [ { suggestion: 'neuromancer', terms: [ 'neuromancer' ], score: 0.46240 } ]
+         * ```
+         *
+         * ### Multiple words:
+         *
+         * ```javascript
+         * // Get suggestions for 'zen ar':
+         * miniSearch.autoSuggest('zen ar')
+         * // => [
+         * //  { suggestion: 'zen archery art', terms: [ 'zen', 'archery', 'art' ], score: 1.73332 },
+         * //  { suggestion: 'zen art', terms: [ 'zen', 'art' ], score: 1.21313 }
+         * // ]
+         * ```
+         *
+         * ### Fuzzy suggestions:
+         *
+         * ```javascript
+         * // Correct spelling mistakes using fuzzy search:
+         * miniSearch.autoSuggest('neromancer', { fuzzy: 0.2 })
+         * // => [ { suggestion: 'neuromancer', terms: [ 'neuromancer' ], score: 1.03998 } ]
+         * ```
+         *
+         * ### Filtering:
+         *
+         * ```javascript
+         * // Get suggestions for 'zen ar', but only within the 'fiction' category
+         * // (assuming that 'category' is a stored field):
+         * miniSearch.autoSuggest('zen ar', {
+         *   filter: (result) => result.category === 'fiction'
+         * })
+         * // => [
+         * //  { suggestion: 'zen archery art', terms: [ 'zen', 'archery', 'art' ], score: 1.73332 },
+         * //  { suggestion: 'zen art', terms: [ 'zen', 'art' ], score: 1.21313 }
+         * // ]
+         * ```
+         *
+         * @param queryString  Query string to be expanded into suggestions
+         * @param options  Search options. The supported options and default values
+         * are the same as for the `search` method, except that by default prefix
+         * search is performed on the last term in the query.
+         * @return  A sorted array of suggestions sorted by relevance score.
+         */
+        MiniSearch.prototype.autoSuggest = function (queryString, options) {
+            if (options === void 0) { options = {}; }
+            options = __assign(__assign({}, defaultAutoSuggestOptions), options);
+            var suggestions = this.search(queryString, options).reduce(function (suggestions, _a) {
+                var score = _a.score, terms = _a.terms;
+                var phrase = terms.join(' ');
+                if (suggestions[phrase] == null) {
+                    suggestions[phrase] = { score: score, terms: terms, count: 1 };
+                }
+                else {
+                    suggestions[phrase].score += score;
+                    suggestions[phrase].count += 1;
+                }
+                return suggestions;
+            }, {});
+            return Object.entries(suggestions)
+                .map(function (_a) {
+                var _b = __read(_a, 2), suggestion = _b[0], _c = _b[1], score = _c.score, terms = _c.terms, count = _c.count;
+                return ({ suggestion: suggestion, terms: terms, score: score / count });
+            })
+                .sort(function (_a, _b) {
+                var a = _a.score;
+                var b = _b.score;
+                return a < b ? 1 : -1;
+            });
+        };
+        Object.defineProperty(MiniSearch.prototype, "documentCount", {
+            /**
+             * Number of documents in the index
+             */
+            get: function () {
+                return this._documentCount;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * Deserializes a JSON index (serialized with `miniSearch.toJSON()`) and
+         * instantiates a MiniSearch instance. It should be given the same options
+         * originally used when serializing the index.
+         *
+         * ### Usage:
+         *
+         * ```javascript
+         * // If the index was serialized with:
+         * let miniSearch = new MiniSearch({ fields: ['title', 'text'] })
+         * miniSearch.addAll(documents)
+         *
+         * const json = JSON.stringify(miniSearch)
+         * // It can later be deserialized like this:
+         * miniSearch = MiniSearch.loadJSON(json, { fields: ['title', 'text'] })
+         * ```
+         *
+         * @param json  JSON-serialized index
+         * @param options  configuration options, same as the constructor
+         * @return An instance of MiniSearch deserialized from the given JSON.
+         */
+        MiniSearch.loadJSON = function (json, options) {
+            if (options == null) {
+                throw new Error('MiniSearch: loadJSON should be given the same options used when serializing the index');
+            }
+            return MiniSearch.loadJS(JSON.parse(json), options);
+        };
+        /**
+         * Returns the default value of an option. It will throw an error if no option
+         * with the given name exists.
+         *
+         * @param optionName  Name of the option
+         * @return The default value of the given option
+         *
+         * ### Usage:
+         *
+         * ```javascript
+         * // Get default tokenizer
+         * MiniSearch.getDefault('tokenize')
+         *
+         * // Get default term processor
+         * MiniSearch.getDefault('processTerm')
+         *
+         * // Unknown options will throw an error
+         * MiniSearch.getDefault('notExisting')
+         * // => throws 'MiniSearch: unknown option "notExisting"'
+         * ```
+         */
+        MiniSearch.getDefault = function (optionName) {
+            if (defaultOptions.hasOwnProperty(optionName)) {
+                return getOwnProperty(defaultOptions, optionName);
+            }
+            else {
+                throw new Error("MiniSearch: unknown option \"" + optionName + "\"");
+            }
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.loadJS = function (js, options) {
+            var index = js.index, documentCount = js.documentCount, nextId = js.nextId, documentIds = js.documentIds, fieldIds = js.fieldIds, fieldLength = js.fieldLength, averageFieldLength = js.averageFieldLength, storedFields = js.storedFields;
+            var miniSearch = new MiniSearch(options);
+            miniSearch._index = new SearchableMap(index._tree, index._prefix);
+            miniSearch._documentCount = documentCount;
+            miniSearch._nextId = nextId;
+            miniSearch._documentIds = documentIds;
+            miniSearch._fieldIds = fieldIds;
+            miniSearch._fieldLength = fieldLength;
+            miniSearch._averageFieldLength = averageFieldLength;
+            miniSearch._fieldIds = fieldIds;
+            miniSearch._storedFields = storedFields || {};
+            return miniSearch;
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.executeQuery = function (query, searchOptions) {
+            var _this = this;
+            var options = __assign(__assign({}, this._options.searchOptions), searchOptions);
+            var boosts = (options.fields || this._options.fields).reduce(function (boosts, field) {
+                var _a;
+                return (__assign(__assign({}, boosts), (_a = {}, _a[field] = getOwnProperty(boosts, field) || 1, _a)));
+            }, options.boost || {});
+            var boostDocument = options.boostDocument, weights = options.weights;
+            var _a = __assign(__assign({}, defaultSearchOptions.weights), weights), fuzzyWeight = _a.fuzzy, prefixWeight = _a.prefix;
+            var exactMatch = this.termResults(query.term, boosts, boostDocument, this._index.get(query.term));
+            if (!query.fuzzy && !query.prefix) {
+                return exactMatch;
+            }
+            var results = [exactMatch];
+            if (query.prefix) {
+                this._index.atPrefix(query.term).forEach(function (term, data) {
+                    var weightedDistance = (0.3 * (term.length - query.term.length)) / term.length;
+                    results.push(_this.termResults(term, boosts, boostDocument, data, prefixWeight, weightedDistance));
+                });
+            }
+            if (query.fuzzy) {
+                var fuzzy = (query.fuzzy === true) ? 0.2 : query.fuzzy;
+                var maxDistance = fuzzy < 1 ? Math.round(query.term.length * fuzzy) : fuzzy;
+                Object.entries(this._index.fuzzyGet(query.term, maxDistance)).forEach(function (_a) {
+                    var _b = __read(_a, 2), term = _b[0], _c = __read(_b[1], 2), data = _c[0], distance = _c[1];
+                    var weightedDistance = distance / term.length;
+                    results.push(_this.termResults(term, boosts, boostDocument, data, fuzzyWeight, weightedDistance));
+                });
+            }
+            return results.reduce(combinators[OR], {});
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.combineResults = function (results, combineWith) {
+            if (combineWith === void 0) { combineWith = OR; }
+            if (results.length === 0) {
+                return {};
+            }
+            var operator = combineWith.toLowerCase();
+            return results.reduce(combinators[operator], null) || {};
+        };
+        /**
+         * Allows serialization of the index to JSON, to possibly store it and later
+         * deserialize it with `MiniSearch.loadJSON`.
+         *
+         * Normally one does not directly call this method, but rather call the
+         * standard JavaScript `JSON.stringify()` passing the `MiniSearch` instance,
+         * and JavaScript will internally call this method. Upon deserialization, one
+         * must pass to `loadJSON` the same options used to create the original
+         * instance that was serialized.
+         *
+         * ### Usage:
+         *
+         * ```javascript
+         * // Serialize the index:
+         * let miniSearch = new MiniSearch({ fields: ['title', 'text'] })
+         * miniSearch.addAll(documents)
+         * const json = JSON.stringify(miniSearch)
+         *
+         * // Later, to deserialize it:
+         * miniSearch = MiniSearch.loadJSON(json, { fields: ['title', 'text'] })
+         * ```
+         *
+         * @return A plain-object serializeable representation of the search index.
+         */
+        MiniSearch.prototype.toJSON = function () {
+            return {
+                index: this._index,
+                documentCount: this._documentCount,
+                nextId: this._nextId,
+                documentIds: this._documentIds,
+                fieldIds: this._fieldIds,
+                fieldLength: this._fieldLength,
+                averageFieldLength: this._averageFieldLength,
+                storedFields: this._storedFields
+            };
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.termResults = function (term, boosts, boostDocument, indexData, weight, editDistance) {
+            var _this = this;
+            if (editDistance === void 0) { editDistance = 0; }
+            if (indexData == null) {
+                return {};
+            }
+            return Object.entries(boosts).reduce(function (results, _a) {
+                var _b = __read(_a, 2), field = _b[0], boost = _b[1];
+                var fieldId = _this._fieldIds[field];
+                var _c = indexData[fieldId] || { ds: {} }, df = _c.df, ds = _c.ds;
+                Object.entries(ds).forEach(function (_a) {
+                    var _b = __read(_a, 2), documentId = _b[0], tf = _b[1];
+                    var docBoost = boostDocument ? boostDocument(_this._documentIds[documentId], term) : 1;
+                    if (!docBoost) {
+                        return;
+                    }
+                    var normalizedLength = _this._fieldLength[documentId][fieldId] / _this._averageFieldLength[fieldId];
+                    results[documentId] = results[documentId] || { score: 0, match: {}, terms: [] };
+                    results[documentId].terms.push(term);
+                    results[documentId].match[term] = getOwnProperty(results[documentId].match, term) || [];
+                    results[documentId].score += docBoost * score(tf, df, _this._documentCount, normalizedLength, boost, editDistance);
+                    results[documentId].match[term].push(field);
+                });
+                return results;
+            }, {});
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.addTerm = function (fieldId, documentId, term) {
+            this._index.update(term, function (indexData) {
+                var _a;
+                indexData = indexData || {};
+                var fieldIndex = indexData[fieldId] || { df: 0, ds: {} };
+                if (fieldIndex.ds[documentId] == null) {
+                    fieldIndex.df += 1;
+                }
+                fieldIndex.ds[documentId] = (fieldIndex.ds[documentId] || 0) + 1;
+                return __assign(__assign({}, indexData), (_a = {}, _a[fieldId] = fieldIndex, _a));
+            });
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.removeTerm = function (fieldId, documentId, term) {
+            var _this = this;
+            if (!this._index.has(term)) {
+                this.warnDocumentChanged(documentId, fieldId, term);
+                return;
+            }
+            this._index.update(term, function (indexData) {
+                var _a;
+                var fieldIndex = indexData[fieldId];
+                if (fieldIndex == null || fieldIndex.ds[documentId] == null) {
+                    _this.warnDocumentChanged(documentId, fieldId, term);
+                    return indexData;
+                }
+                if (fieldIndex.ds[documentId] <= 1) {
+                    if (fieldIndex.df <= 1) {
+                        delete indexData[fieldId];
+                        return indexData;
+                    }
+                    fieldIndex.df -= 1;
+                }
+                if (fieldIndex.ds[documentId] <= 1) {
+                    delete fieldIndex.ds[documentId];
+                    return indexData;
+                }
+                fieldIndex.ds[documentId] -= 1;
+                return __assign(__assign({}, indexData), (_a = {}, _a[fieldId] = fieldIndex, _a));
+            });
+            if (Object.keys(this._index.get(term)).length === 0) {
+                this._index.delete(term);
+            }
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.warnDocumentChanged = function (shortDocumentId, fieldId, term) {
+            if (console == null || console.warn == null) {
+                return;
+            }
+            var fieldName = Object.entries(this._fieldIds).find(function (_a) {
+                var _b = __read(_a, 2), name = _b[0], id = _b[1];
+                return id === fieldId;
+            })[0];
+            console.warn("MiniSearch: document with ID " + this._documentIds[shortDocumentId] + " has changed before removal: term \"" + term + "\" was not present in field \"" + fieldName + "\". Removing a document after it has changed can corrupt the index!");
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.addDocumentId = function (documentId) {
+            var shortDocumentId = this._nextId.toString(36);
+            this._documentIds[shortDocumentId] = documentId;
+            this._documentCount += 1;
+            this._nextId += 1;
+            return shortDocumentId;
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.addFields = function (fields) {
+            var _this = this;
+            fields.forEach(function (field, i) { _this._fieldIds[field] = i; });
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.addFieldLength = function (documentId, fieldId, count, length) {
+            this._averageFieldLength[fieldId] = this._averageFieldLength[fieldId] || 0;
+            var totalLength = (this._averageFieldLength[fieldId] * count) + length;
+            this._fieldLength[documentId] = this._fieldLength[documentId] || {};
+            this._fieldLength[documentId][fieldId] = length;
+            this._averageFieldLength[fieldId] = totalLength / (count + 1);
+        };
+        /**
+         * @ignore
+         */
+        MiniSearch.prototype.saveStoredFields = function (documentId, doc) {
+            var _this = this;
+            var _a = this._options, storeFields = _a.storeFields, extractField = _a.extractField;
+            if (storeFields == null || storeFields.length === 0) {
+                return;
+            }
+            this._storedFields[documentId] = this._storedFields[documentId] || {};
+            storeFields.forEach(function (fieldName) {
+                var fieldValue = extractField(doc, fieldName);
+                if (fieldValue === undefined) {
+                    return;
+                }
+                _this._storedFields[documentId][fieldName] = fieldValue;
+            });
+        };
+        return MiniSearch;
+    }());
+    var getOwnProperty = function (object, property) {
+        return Object.prototype.hasOwnProperty.call(object, property) ? object[property] : undefined;
+    };
+    var combinators = (_a = {},
+        _a[OR] = function (a, b) {
+            return Object.entries(b).reduce(function (combined, _a) {
+                var _b;
+                var _c = __read(_a, 2), documentId = _c[0], _d = _c[1], score = _d.score, match = _d.match, terms = _d.terms;
+                if (combined[documentId] == null) {
+                    combined[documentId] = { score: score, match: match, terms: terms };
+                }
+                else {
+                    combined[documentId].score += score;
+                    combined[documentId].score *= 1.5;
+                    (_b = combined[documentId].terms).push.apply(_b, __spread(terms));
+                    Object.assign(combined[documentId].match, match);
+                }
+                return combined;
+            }, a || {});
+        },
+        _a[AND] = function (a, b) {
+            if (a == null) {
+                return b;
+            }
+            return Object.entries(b).reduce(function (combined, _a) {
+                var _b = __read(_a, 2), documentId = _b[0], _c = _b[1], score = _c.score, match = _c.match, terms = _c.terms;
+                if (a[documentId] === undefined) {
+                    return combined;
+                }
+                combined[documentId] = combined[documentId] || {};
+                combined[documentId].score = a[documentId].score + score;
+                combined[documentId].match = __assign(__assign({}, a[documentId].match), match);
+                combined[documentId].terms = __spread(a[documentId].terms, terms);
+                return combined;
+            }, {});
+        },
+        _a);
+    var tfIdf = function (tf, df, n) { return tf * Math.log(n / df); };
+    var score = function (termFrequency, documentFrequency, documentCount, normalizedLength, boost, editDistance) {
+        var weight = boost / (1 + (0.333 * boost * editDistance));
+        return weight * tfIdf(termFrequency, documentFrequency, documentCount) / normalizedLength;
+    };
+    var termToQuery = function (options) { return function (term, i, terms) {
+        var fuzzy = (typeof options.fuzzy === 'function')
+            ? options.fuzzy(term, i, terms)
+            : (options.fuzzy || false);
+        var prefix = (typeof options.prefix === 'function')
+            ? options.prefix(term, i, terms)
+            : (options.prefix === true);
+        return { term: term, fuzzy: fuzzy, prefix: prefix };
+    }; };
+    var uniq = function (array) {
+        return array.filter(function (element, i, array) { return array.indexOf(element) === i; });
+    };
+    var defaultOptions = {
+        idField: 'id',
+        extractField: function (document, fieldName) { return document[fieldName]; },
+        tokenize: function (text, fieldName) { return text.split(SPACE_OR_PUNCTUATION); },
+        processTerm: function (term, fieldName) { return term.toLowerCase(); },
+        fields: undefined,
+        searchOptions: undefined,
+        storeFields: []
+    };
+    var defaultSearchOptions = {
+        combineWith: OR,
+        prefix: false,
+        fuzzy: false,
+        boost: {},
+        weights: { fuzzy: 0.9, prefix: 0.75 }
+    };
+    var defaultAutoSuggestOptions = {
+        prefix: function (term, i, terms) {
+            return i === terms.length - 1;
+        }
+    };
+    // This regular expression matches any Unicode space or punctuation character
+    // Adapted from https://unicode.org/cldr/utility/list-unicodeset.jsp?a=%5Cp%7BZ%7D%5Cp%7BP%7D&abb=on&c=on&esc=on
+    var SPACE_OR_PUNCTUATION = /[\n\r -#%-*,-/:;?@[-\]_{}\u00A0\u00A1\u00A7\u00AB\u00B6\u00B7\u00BB\u00BF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u1680\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2000-\u200A\u2010-\u2029\u202F-\u2043\u2045-\u2051\u2053-\u205F\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u3000-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]+/u;
+
     /* node_modules/svelte-tooltip/src/SvelteTooltip.svelte generated by Svelte v3.31.2 */
 
     const file = "node_modules/svelte-tooltip/src/SvelteTooltip.svelte";
@@ -38497,15 +39932,15 @@ var app = (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
+    var __assign$1 = function() {
+        __assign$1 = Object.assign || function __assign(t) {
             for (var s, i = 1, n = arguments.length; i < n; i++) {
                 s = arguments[i];
                 for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
             }
             return t;
         };
-        return __assign.apply(this, arguments);
+        return __assign$1.apply(this, arguments);
     };
 
     /*! *****************************************************************************
@@ -38523,7 +39958,7 @@ var app = (function () {
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    function __read(o, n) {
+    function __read$1(o, n) {
         var m = typeof Symbol === "function" && o[Symbol.iterator];
         if (!m) return o;
         var i = m.call(o), r, ar = [], e;
@@ -38540,9 +39975,9 @@ var app = (function () {
         return ar;
     }
 
-    function __spread() {
+    function __spread$1() {
         for (var ar = [], i = 0; i < arguments.length; i++)
-            ar = ar.concat(__read(arguments[i]));
+            ar = ar.concat(__read$1(arguments[i]));
         return ar;
     }
 
@@ -38648,7 +40083,7 @@ var app = (function () {
                 args[_i - 2] = arguments[_i];
             }
             this.root_ = root;
-            this.initialize.apply(this, __spread(args));
+            this.initialize.apply(this, __spread$1(args));
             // Note that we initialize foundation here and not within the constructor's default param so that
             // this.root_ is defined and can be used within the foundation class.
             this.foundation_ = foundation === undefined ? this.getDefaultFoundation() : foundation;
@@ -38825,15 +40260,15 @@ var app = (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var __assign$1 = function() {
-        __assign$1 = Object.assign || function __assign(t) {
+    var __assign$2 = function() {
+        __assign$2 = Object.assign || function __assign(t) {
             for (var s, i = 1, n = arguments.length; i < n; i++) {
                 s = arguments[i];
                 for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
             }
             return t;
         };
-        return __assign$1.apply(this, arguments);
+        return __assign$2.apply(this, arguments);
     };
 
     /**
@@ -38889,7 +40324,7 @@ var app = (function () {
     var MDCFloatingLabelFoundation = /** @class */ (function (_super) {
         __extends$1(MDCFloatingLabelFoundation, _super);
         function MDCFloatingLabelFoundation(adapter) {
-            var _this = _super.call(this, __assign$1({}, MDCFloatingLabelFoundation.defaultAdapter, adapter)) || this;
+            var _this = _super.call(this, __assign$2({}, MDCFloatingLabelFoundation.defaultAdapter, adapter)) || this;
             _this.shakeAnimationEndHandler_ = function () { return _this.handleShakeAnimationEnd_(); };
             return _this;
         }
@@ -39058,15 +40493,15 @@ var app = (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var __assign$2 = function() {
-        __assign$2 = Object.assign || function __assign(t) {
+    var __assign$3 = function() {
+        __assign$3 = Object.assign || function __assign(t) {
             for (var s, i = 1, n = arguments.length; i < n; i++) {
                 s = arguments[i];
                 for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
             }
             return t;
         };
-        return __assign$2.apply(this, arguments);
+        return __assign$3.apply(this, arguments);
     };
 
     /**
@@ -39121,7 +40556,7 @@ var app = (function () {
     var MDCLineRippleFoundation = /** @class */ (function (_super) {
         __extends$2(MDCLineRippleFoundation, _super);
         function MDCLineRippleFoundation(adapter) {
-            var _this = _super.call(this, __assign$2({}, MDCLineRippleFoundation.defaultAdapter, adapter)) || this;
+            var _this = _super.call(this, __assign$3({}, MDCLineRippleFoundation.defaultAdapter, adapter)) || this;
             _this.transitionEndHandler_ = function (evt) { return _this.handleTransitionEnd(evt); };
             return _this;
         }
@@ -39278,15 +40713,15 @@ var app = (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var __assign$3 = function() {
-        __assign$3 = Object.assign || function __assign(t) {
+    var __assign$4 = function() {
+        __assign$4 = Object.assign || function __assign(t) {
             for (var s, i = 1, n = arguments.length; i < n; i++) {
                 s = arguments[i];
                 for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
             }
             return t;
         };
-        return __assign$3.apply(this, arguments);
+        return __assign$4.apply(this, arguments);
     };
 
     /**
@@ -39349,7 +40784,7 @@ var app = (function () {
     var MDCNotchedOutlineFoundation = /** @class */ (function (_super) {
         __extends$3(MDCNotchedOutlineFoundation, _super);
         function MDCNotchedOutlineFoundation(adapter) {
-            return _super.call(this, __assign$3({}, MDCNotchedOutlineFoundation.defaultAdapter, adapter)) || this;
+            return _super.call(this, __assign$4({}, MDCNotchedOutlineFoundation.defaultAdapter, adapter)) || this;
         }
         Object.defineProperty(MDCNotchedOutlineFoundation, "strings", {
             get: function () {
@@ -39514,15 +40949,15 @@ var app = (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var __assign$4 = function() {
-        __assign$4 = Object.assign || function __assign(t) {
+    var __assign$5 = function() {
+        __assign$5 = Object.assign || function __assign(t) {
             for (var s, i = 1, n = arguments.length; i < n; i++) {
                 s = arguments[i];
                 for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
             }
             return t;
         };
-        return __assign$4.apply(this, arguments);
+        return __assign$5.apply(this, arguments);
     };
 
     /**
@@ -39683,7 +41118,7 @@ var app = (function () {
     var MDCRippleFoundation = /** @class */ (function (_super) {
         __extends$4(MDCRippleFoundation, _super);
         function MDCRippleFoundation(adapter) {
-            var _this = _super.call(this, __assign$4({}, MDCRippleFoundation.defaultAdapter, adapter)) || this;
+            var _this = _super.call(this, __assign$5({}, MDCRippleFoundation.defaultAdapter, adapter)) || this;
             _this.activationAnimationHasEnded_ = false;
             _this.activationTimer_ = 0;
             _this.fgDeactivationRemovalTimer_ = 0;
@@ -40046,7 +41481,7 @@ var app = (function () {
             if (!activationState.isActivated) {
                 return;
             }
-            var state = __assign$4({}, activationState);
+            var state = __assign$5({}, activationState);
             if (activationState.isProgrammatic) {
                 requestAnimationFrame(function () { return _this.animateDeactivation_(state); });
                 this.resetActivationState_();
@@ -40268,7 +41703,7 @@ var app = (function () {
     var MDCTextFieldCharacterCounterFoundation = /** @class */ (function (_super) {
         __extends(MDCTextFieldCharacterCounterFoundation, _super);
         function MDCTextFieldCharacterCounterFoundation(adapter) {
-            return _super.call(this, __assign({}, MDCTextFieldCharacterCounterFoundation.defaultAdapter, adapter)) || this;
+            return _super.call(this, __assign$1({}, MDCTextFieldCharacterCounterFoundation.defaultAdapter, adapter)) || this;
         }
         Object.defineProperty(MDCTextFieldCharacterCounterFoundation, "cssClasses", {
             get: function () {
@@ -40448,7 +41883,7 @@ var app = (function () {
          */
         function MDCTextFieldFoundation(adapter, foundationMap) {
             if (foundationMap === void 0) { foundationMap = {}; }
-            var _this = _super.call(this, __assign({}, MDCTextFieldFoundation.defaultAdapter, adapter)) || this;
+            var _this = _super.call(this, __assign$1({}, MDCTextFieldFoundation.defaultAdapter, adapter)) || this;
             _this.isFocused_ = false;
             _this.receivedUserInput_ = false;
             _this.isValid_ = true;
@@ -40928,7 +42363,7 @@ var app = (function () {
     var MDCTextFieldHelperTextFoundation = /** @class */ (function (_super) {
         __extends(MDCTextFieldHelperTextFoundation, _super);
         function MDCTextFieldHelperTextFoundation(adapter) {
-            return _super.call(this, __assign({}, MDCTextFieldHelperTextFoundation.defaultAdapter, adapter)) || this;
+            return _super.call(this, __assign$1({}, MDCTextFieldHelperTextFoundation.defaultAdapter, adapter)) || this;
         }
         Object.defineProperty(MDCTextFieldHelperTextFoundation, "cssClasses", {
             get: function () {
@@ -41137,7 +42572,7 @@ var app = (function () {
     var MDCTextFieldIconFoundation = /** @class */ (function (_super) {
         __extends(MDCTextFieldIconFoundation, _super);
         function MDCTextFieldIconFoundation(adapter) {
-            var _this = _super.call(this, __assign({}, MDCTextFieldIconFoundation.defaultAdapter, adapter)) || this;
+            var _this = _super.call(this, __assign$1({}, MDCTextFieldIconFoundation.defaultAdapter, adapter)) || this;
             _this.savedTabIndex_ = null;
             _this.interactionHandler_ = function (evt) { return _this.handleInteraction(evt); };
             return _this;
@@ -41602,7 +43037,7 @@ var app = (function () {
             // DO NOT INLINE this variable. For backward compatibility, foundations take a Partial<MDCFooAdapter>.
             // To ensure we don't accidentally omit any methods, we need a separate, strongly typed adapter variable.
             // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
-            var adapter = __assign({}, this.getRootAdapterMethods_(), this.getInputAdapterMethods_(), this.getLabelAdapterMethods_(), this.getLineRippleAdapterMethods_(), this.getOutlineAdapterMethods_());
+            var adapter = __assign$1({}, this.getRootAdapterMethods_(), this.getInputAdapterMethods_(), this.getLabelAdapterMethods_(), this.getLineRippleAdapterMethods_(), this.getOutlineAdapterMethods_());
             // tslint:enable:object-literal-sort-keys
             return new MDCTextFieldFoundation(adapter, this.getFoundationMap_());
         };
@@ -41703,7 +43138,7 @@ var app = (function () {
             // DO NOT INLINE this variable. For backward compatibility, foundations take a Partial<MDCFooAdapter>.
             // To ensure we don't accidentally omit any methods, we need a separate, strongly typed adapter variable.
             // tslint:disable:object-literal-sort-keys Methods should be in the same order as the adapter interface.
-            var adapter = __assign({}, MDCRipple.createAdapter(this), { isSurfaceActive: function () { return matches(_this.input_, ':active'); }, registerInteractionHandler: function (evtType, handler) { return _this.input_.addEventListener(evtType, handler, applyPassive()); }, deregisterInteractionHandler: function (evtType, handler) {
+            var adapter = __assign$1({}, MDCRipple.createAdapter(this), { isSurfaceActive: function () { return matches(_this.input_, ':active'); }, registerInteractionHandler: function (evtType, handler) { return _this.input_.addEventListener(evtType, handler, applyPassive()); }, deregisterInteractionHandler: function (evtType, handler) {
                     return _this.input_.removeEventListener(evtType, handler, applyPassive());
                 } });
             // tslint:enable:object-literal-sort-keys
@@ -45280,1422 +46715,2500 @@ var app = (function () {
     		{
     			code: "amalg",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "cup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "oplus",
     			"package": 0,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "times",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "ast",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "dagger",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "oslash",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "bigcirc",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "ddagger",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "otimes",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "bigtriangledown",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "diamond",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "pm",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "unlhd",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "bigtriangleup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "div",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "rhd",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "unrhd",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "bullet",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "lhd",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "setminus",
     			"package": 0,
-    			keywords: [
-    				"subtraction",
-    				"-"
-    			]
+    			keywords: {
+    				text: [
+    					"subtraction"
+    				],
+    				math: [
+    					"-"
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "uplus",
     			"package": 0,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition",
+    					"u"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "cap",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "mp",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "sqcap",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		},
     		{
     			code: "vee",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 25
     		},
     		{
     			code: "cdot",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 26
     		},
     		{
     			code: "odot",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 27
     		},
     		{
     			code: "sqcup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 28
     		},
     		{
     			code: "wedge",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 29
     		},
     		{
     			code: "circ",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 30
     		},
     		{
     			code: "ominus",
     			"package": 0,
-    			keywords: [
-    				"subtraction",
-    				"-"
-    			]
+    			keywords: {
+    				text: [
+    					"subtraction",
+    					"o"
+    				],
+    				math: [
+    					"-"
+    				]
+    			},
+    			id: 31
     		},
     		{
     			code: "star",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 32
     		},
     		{
     			code: "wr",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 33
     		},
     		{
     			code: "barwedge",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 34
     		},
     		{
     			code: "circledcirc",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 35
     		},
     		{
     			code: "intercal",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 36
     		},
     		{
     			code: "boxdot",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 37
     		},
     		{
     			code: "circleddash",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 38
     		},
     		{
     			code: "boxminus",
     			"package": 1,
-    			keywords: [
-    				"subtraction",
-    				"-"
-    			]
+    			keywords: {
+    				text: [
+    					"subtraction",
+    					"box"
+    				],
+    				math: [
+    					"-"
+    				]
+    			},
+    			id: 39
     		},
     		{
     			code: "Cup",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 40
     		},
     		{
     			code: "ltimes",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 41
     		},
     		{
     			code: "boxplus",
     			"package": 1,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition",
+    					"box"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 42
     		},
     		{
     			code: "curlyvee",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 43
     		},
     		{
     			code: "boxtimes",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 44
     		},
     		{
     			code: "curlywedge",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 45
     		},
     		{
     			code: "rtimes",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 46
     		},
     		{
     			code: "Cap",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 47
     		},
     		{
     			code: "divideontimes",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 48
     		},
     		{
     			code: "smallsetminus",
     			"package": 1,
-    			keywords: [
-    				"subtraction",
-    				"-"
-    			]
+    			keywords: {
+    				text: [
+    					"subtraction",
+    					"small",
+    					"set"
+    				],
+    				math: [
+    					"-"
+    				]
+    			},
+    			id: 49
     		},
     		{
     			code: "centerdot",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 50
     		},
     		{
     			code: "dotplus",
     			"package": 1,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition",
+    					"dot"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 51
     		},
     		{
     			code: "veebar",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 52
     		},
     		{
     			code: "circledast",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 53
     		},
     		{
     			code: "doublebarwedge",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 54
     		},
     		{
     			code: "top",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 55
     		}
     	],
     	[
     		{
     			code: "bigcap",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "bigotimes",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "bigwedge",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "prod",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "bigcup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "bigsqcup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "coprod",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "sum",
     			"package": 0,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "bigodot",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "biguplus",
     			"package": 0,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition",
+    					"U"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "int",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "bigoplus",
     			"package": 0,
-    			keywords: [
-    				"addition",
-    				"+"
-    			]
+    			keywords: {
+    				text: [
+    					"addition",
+    					"O"
+    				],
+    				math: [
+    					"+"
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "bigvee",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "oint",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "iint",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "iiint",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "iiiint",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "idotsint",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		}
     	],
     	[
     		{
     			code: "approx",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "equiv",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "perp",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "smile",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "asymp",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "frown",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "prec",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "succ",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "bowtie",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "Join",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "preceq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"<="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"predecessor"
+    				],
+    				math: [
+    					"=",
+    					"<="
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "succeq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"=",
-    				">="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"successor"
+    				],
+    				math: [
+    					"=",
+    					">="
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "cong",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "mid",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "propto",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "vdash",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "dashv",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "models",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "sim",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "doteq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"dot"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "parallel",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "simeq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"similar"
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"similar"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "approxeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"approximately"
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"approximately"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "eqcirc",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"circle"
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"circle"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "succapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		},
     		{
     			code: "backepsilon",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 25
     		},
     		{
     			code: "fallingdotseq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"falling",
+    					"dots"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 26
     		},
     		{
     			code: "succcurlyeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				">="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"successor",
+    					"curly"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 27
     		},
     		{
     			code: "backsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 28
     		},
     		{
     			code: "multimap",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 29
     		},
     		{
     			code: "succsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 30
     		},
     		{
     			code: "backsimeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"similar"
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"back",
+    					"similar"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 31
     		},
     		{
     			code: "pitchfork",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 32
     		},
     		{
     			code: "therefore",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 33
     		},
     		{
     			code: "because",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 34
     		},
     		{
     			code: "precapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 35
     		},
     		{
     			code: "thickapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 36
     		},
     		{
     			code: "between",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 37
     		},
     		{
     			code: "preccurlyeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"<="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"predecessor",
+    					"curly"
+    				],
+    				math: [
+    					"=",
+    					"<="
+    				]
+    			},
+    			id: 38
     		},
     		{
     			code: "thicksim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 39
     		},
     		{
     			code: "Bumpeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"bump"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 40
     		},
     		{
     			code: "precsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 41
     		},
     		{
     			code: "varpropto",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 42
     		},
     		{
     			code: "bumpeq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 43
     		},
     		{
     			code: "risingdotseq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"rising",
+    					"dots"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 44
     		},
     		{
     			code: "Vdash",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 45
     		},
     		{
     			code: "circeq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				"circle"
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"circle"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 46
     		},
     		{
     			code: "shortmid",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 47
     		},
     		{
     			code: "vDash",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 48
     		},
     		{
     			code: "curlyeqprec",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 49
     		},
     		{
     			code: "shortparallel",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 50
     		},
     		{
     			code: "Vvdash",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 51
     		},
     		{
     			code: "curlyeqsucc",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"=",
-    				">="
-    			]
+    			keywords: {
+    				text: [
+    					"equal",
+    					"successor",
+    					"curly"
+    				],
+    				math: [
+    					"=",
+    					">="
+    				]
+    			},
+    			id: 52
     		},
     		{
     			code: "smallfrown",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 53
     		},
     		{
     			code: "doteqdot",
     			"package": 1,
-    			keywords: [
-    				"eqal",
-    				"="
-    			]
+    			keywords: {
+    				text: [
+    					"equal"
+    				],
+    				math: [
+    					"="
+    				]
+    			},
+    			id: 54
     		},
     		{
     			code: "smallsmile",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 55
     		}
     	],
     	[
     		{
     			code: "sqsubset",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "sqsupseteq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				">=",
-    				"super",
-    				"square"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "supset",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "sqsubseteq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				"<=",
-    				"sub",
-    				"square"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "subset",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "supseteq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				">=",
-    				"super"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "sqsupset",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "subseteq",
     			"package": 0,
-    			keywords: [
-    				"equal",
-    				">=",
-    				"sub"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "nsubseteq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!<=",
-    				"sub",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "subseteqq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"<=",
-    				"sub"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "supsetneqq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!>=",
-    				"super",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "nsupseteq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!>=",
-    				"super",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "subsetneq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!<=",
-    				"sub",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "varsubsetneq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "nsupseteqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "subsetneqq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!<=",
-    				"sub",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "varsubsetneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "sqsubset",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "Supset",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "varsupsetneq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "sqsupset",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "supseteqq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				">=",
-    				"super"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "varsupsetneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "Subset",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "supsetneq",
     			"package": 1,
-    			keywords: [
-    				"equal",
-    				"!>=",
-    				"super",
-    				"not"
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		}
     	],
     	[
     		{
     			code: "geq",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    					"greater",
+    					"equal"
+    				],
+    				math: [
+    					">="
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "gg",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    					"greater"
+    				],
+    				math: [
+    					">"
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "leq",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    					"less",
+    					"equal"
+    				],
+    				math: [
+    					"<="
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "ll",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    					"less"
+    				],
+    				math: [
+    					"<"
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "neq",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    					"greater",
+    					"equal"
+    				],
+    				math: [
+    					"=/=",
+    					"=|="
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "eqslantgtr",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "gtrdot",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "lesseqgtr",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "ngeq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "eqslantless",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "gtreqless",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "lesseqqgtr",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "ngeqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "geqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "gtreqqless",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "lessgtr",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "ngeqslant",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "geqslant",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "gtrless",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "lesssim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "ngtr",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "ggg",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "gtrsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "lll",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "nleq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		},
     		{
     			code: "gnapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 25
     		},
     		{
     			code: "gvertneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 26
     		},
     		{
     			code: "lnapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 27
     		},
     		{
     			code: "nleqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 28
     		},
     		{
     			code: "gneq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 29
     		},
     		{
     			code: "leqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 30
     		},
     		{
     			code: "lneq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 31
     		},
     		{
     			code: "nleqslant",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 32
     		},
     		{
     			code: "gneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 33
     		},
     		{
     			code: "leqslant",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 34
     		},
     		{
     			code: "lneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 35
     		},
     		{
     			code: "nless",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 36
     		},
     		{
     			code: "gnsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 37
     		},
     		{
     			code: "lessapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 38
     		},
     		{
     			code: "lnsim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 39
     		},
     		{
     			code: "gtrapprox",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 40
     		},
     		{
     			code: "lessdot",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 41
     		},
     		{
     			code: "lvertneqq",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 42
     		}
     	],
     	[
     		{
     			code: "Downarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "nwarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "downarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "Rightarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "searrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "leadsto",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "longmapsto",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "swarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "uparrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "Leftarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "Uparrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "mapsto",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "updownarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "nearrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "Updownarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "Rsh",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "downdownarrows",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "Lsh",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "upuparrows",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		}
     	],
     	[
@@ -46704,990 +49217,1800 @@ var app = (function () {
     		{
     			code: "arccos",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "cos",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "csc",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "exp",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "ker",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "limsup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "min",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "sinh",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "arcsin",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "cosh",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "deg",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "gcd",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "lg",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "ln",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "Pr",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "sup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "arctan",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "cot",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "det",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "hom",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "lim",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "log",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "sec",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "tan",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "arg",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		},
     		{
     			code: "coth",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 25
     		},
     		{
     			code: "dim",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 26
     		},
     		{
     			code: "inf",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 27
     		},
     		{
     			code: "liminf",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 28
     		},
     		{
     			code: "max",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 29
     		},
     		{
     			code: "sin",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 30
     		},
     		{
     			code: "tanh",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 31
     		},
     		{
     			code: "bmod",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 32
     		},
     		{
     			code: "injlim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 33
     		},
     		{
     			code: "varinjlim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 34
     		},
     		{
     			code: "varlimsup",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 35
     		},
     		{
     			code: "projlim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 36
     		},
     		{
     			code: "varliminf",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 37
     		},
     		{
     			code: "varprojlim",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 38
     		}
     	],
     	[
     		{
     			code: "alpha",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "theta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "tau",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "beta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "vartheta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "pi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "upsilon",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "gamma",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "iota",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "varpi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "phi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "delta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "kappa",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "rho",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "varphi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "epsilon",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "lambda",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "varrho",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "chi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "varepsilon",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "mu",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "sigma",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "psi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		},
     		{
     			code: "zeta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 23
     		},
     		{
     			code: "nu",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 24
     		},
     		{
     			code: "varsigma",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 25
     		},
     		{
     			code: "omega",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 26
     		},
     		{
     			code: "eta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 27
     		},
     		{
     			code: "xi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 28
     		},
     		{
     			code: "Gamma",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 29
     		},
     		{
     			code: "Lambda",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 30
     		},
     		{
     			code: "Sigma",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 31
     		},
     		{
     			code: "Psi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 32
     		},
     		{
     			code: "Delta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 33
     		},
     		{
     			code: "Xi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 34
     		},
     		{
     			code: "Upsilon",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 35
     		},
     		{
     			code: "Omega",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 36
     		},
     		{
     			code: "Theta",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 37
     		},
     		{
     			code: "Pi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 38
     		},
     		{
     			code: "Phi",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 39
     		},
     		{
     			code: "digamma",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 40
     		},
     		{
     			code: "varkappa",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 41
     		}
     	],
     	[
     		{
     			code: "beth",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "gimel",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "daleth",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "aleph",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		}
     	],
     	[
     		{
     			code: "bot",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "forall",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "imath",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "ni",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "top",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "ell",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "hbar",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "in",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "partial",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "wp",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "exists",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "Im",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "jmath",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "Re",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "Bbbk",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "complement",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "hbar",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "circledR",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		},
     		{
     			code: "Finv",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 18
     		},
     		{
     			code: "hslash",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 19
     		},
     		{
     			code: "circledS",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 20
     		},
     		{
     			code: "Game",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 21
     		},
     		{
     			code: "nexists",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 22
     		}
     	],
     	[
     		{
     			code: "ulcorner",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "urcorner",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "llcorner",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "lrcorner",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		}
     	],
     	[
     		{
     			code: "downarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "Downarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "langle",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "rangle",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "|",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "lceil",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "rceil",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "uparrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "Uparrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "lfloor",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "rfloor",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "updownarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "Updownarrow",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		},
     		{
     			code: "{",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 13
     		},
     		{
     			code: "}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 14
     		},
     		{
     			code: "backslash",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 15
     		},
     		{
     			code: "vert",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 16
     		},
     		{
     			code: "Vert",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 17
     		}
     	],
     	[
     		{
     			code: "lmoustache",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "rmoustache",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "lgroup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "rgroup",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "arrowvert",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "Arrowvert",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "bracevert",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "lvert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "rvert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "lVert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "rVert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "vert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "Vert",
     			"package": 1,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		}
     	],
     	[
     		{
     			code: "acute{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "check{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "grave{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "tilde{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "bar{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "ddot{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		},
     		{
     			code: "hat{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 6
     		},
     		{
     			code: "vec{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 7
     		},
     		{
     			code: "breve{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 8
     		},
     		{
     			code: "dot{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 9
     		},
     		{
     			code: "mathring{a}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 10
     		},
     		{
     			code: "imath",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 11
     		},
     		{
     			code: "jmath",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 12
     		}
     	],
     	[
     		{
     			code: "widetilde{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 0
     		},
     		{
     			code: "widehat{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 1
     		},
     		{
     			code: "underline{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 2
     		},
     		{
     			code: "overbrace{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 3
     		},
     		{
     			code: "underbrace{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 4
     		},
     		{
     			code: "sqrt{abc}",
     			"package": 0,
-    			keywords: [
-    			]
+    			keywords: {
+    				text: [
+    				],
+    				math: [
+    				]
+    			},
+    			id: 5
     		}
     	]
     ];
@@ -47762,7 +51085,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (148:3) {#if selectedSymbol != null}
+    // (167:3) {#if selectedSymbol != null}
     function create_if_block_1$1(ctx) {
     	let t0;
     	let t1_value = /*selectedSymbol*/ ctx[1].code + "";
@@ -47790,14 +51113,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(148:3) {#if selectedSymbol != null}",
+    		source: "(167:3) {#if selectedSymbol != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (156:3) {#if filterSymbols(symbols, searchWord).length > 0}
+    // (175:3) {#if filterSymbols(symbols, searchWord).length > 0}
     function create_if_block$4(ctx) {
     	let div;
     	let h2;
@@ -47810,9 +51133,9 @@ var app = (function () {
     			h2 = element("h2");
     			t = text(t_value);
     			attr_dev(h2, "class", "svelte-b0l0zs");
-    			add_location(h2, file$7, 157, 5, 2638);
+    			add_location(h2, file$7, 176, 5, 3077);
     			attr_dev(div, "class", "category-heading svelte-b0l0zs");
-    			add_location(div, file$7, 156, 4, 2602);
+    			add_location(div, file$7, 175, 4, 3041);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -47829,14 +51152,14 @@ var app = (function () {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(156:3) {#if filterSymbols(symbols, searchWord).length > 0}",
+    		source: "(175:3) {#if filterSymbols(symbols, searchWord).length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (161:3) {#each filterSymbols(symbols, searchWord) as symbol, symbolIndex}
+    // (180:3) {#each filterSymbols(symbols, searchWord) as symbol, symbolIndex}
     function create_each_block_1(ctx) {
     	let div1;
     	let div0;
@@ -47859,10 +51182,10 @@ var app = (function () {
     			div0 = element("div");
     			t = space();
     			attr_dev(div0, "class", "symbol");
-    			add_location(div0, file$7, 182, 5, 3344);
+    			add_location(div0, file$7, 201, 5, 3783);
     			attr_dev(div1, "class", "symbol-container svelte-b0l0zs");
     			toggle_class(div1, "selected", /*copiedSymbol*/ ctx[2] === /*symbol*/ ctx[13]);
-    			add_location(div1, file$7, 161, 4, 2768);
+    			add_location(div1, file$7, 180, 4, 3207);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -47898,14 +51221,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(161:3) {#each filterSymbols(symbols, searchWord) as symbol, symbolIndex}",
+    		source: "(180:3) {#each filterSymbols(symbols, searchWord) as symbol, symbolIndex}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (155:2) {#each categories as symbols, categoryIndex}
+    // (174:2) {#each categories as symbols, categoryIndex}
     function create_each_block(ctx) {
     	let show_if = /*filterSymbols*/ ctx[3](/*symbols*/ ctx[10], /*searchWord*/ ctx[0]).length > 0;
     	let t;
@@ -47992,7 +51315,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(155:2) {#each categories as symbols, categoryIndex}",
+    		source: "(174:2) {#each categories as symbols, categoryIndex}",
     		ctx
     	});
 
@@ -48051,15 +51374,15 @@ var app = (function () {
     			}
 
     			attr_dev(div0, "class", "search-container svelte-b0l0zs");
-    			add_location(div0, file$7, 143, 2, 2248);
+    			add_location(div0, file$7, 162, 2, 2687);
     			attr_dev(div1, "class", "selected-container svelte-b0l0zs");
-    			add_location(div1, file$7, 146, 2, 2345);
+    			add_location(div1, file$7, 165, 2, 2784);
     			attr_dev(header, "class", "svelte-b0l0zs");
-    			add_location(header, file$7, 142, 1, 2237);
+    			add_location(header, file$7, 161, 1, 2676);
     			attr_dev(content, "class", "container svelte-b0l0zs");
-    			add_location(content, file$7, 153, 1, 2468);
+    			add_location(content, file$7, 172, 1, 2907);
     			attr_dev(main, "class", "svelte-b0l0zs");
-    			add_location(main, file$7, 141, 0, 2229);
+    			add_location(main, file$7, 160, 0, 2668);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -48181,10 +51504,25 @@ var app = (function () {
     	const filterSymbols = (symbols, searchWord) => {
     		if (searchWord.length <= 0) return symbols;
 
-    		return symbols.filter(symbol => {
-    			if (symbol.code.includes(searchWord)) return true;
-    			return symbol.keywords.some(keyWord => keyWord.includes(searchWord));
+    		let miniSearch = new MiniSearch({
+    				fields: ["code", "keywords.text", "keywords.math"],
+    				storeFields: ["code"],
+    				extractField: (document, fieldName) => {
+    					// Access nested fields
+    					return fieldName.split(".").reduce((doc, key) => doc && doc[key], document);
+    				}
+    			});
+
+    		// Index all documents
+    		miniSearch.addAll(symbols);
+
+    		const searchResults = miniSearch.search(searchWord, {
+    			fuzzy: term => term.length > 3 ? 0.2 : null,
+    			boost: { "keywords.math": 3 }
     		});
+
+    		console.log(searchResults);
+    		return searchResults.map(searchResult => symbols[searchResult.id]);
     	};
 
     	categories.forEach(symbols => symbols.forEach(symbol => {
@@ -48240,6 +51578,7 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		onMount,
     		texToSVG: TeXToSVG_1,
+    		MiniSearch,
     		SvelteTooltip,
     		Textfield,
     		categories,

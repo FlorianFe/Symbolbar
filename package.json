@@ -34,6 +34,7 @@
   "dependencies": {
     "mathjax": "^3.1.2",
     "menubar": "^9.0.1",
+    "minisearch": "^3.0.2",
     "node-sass": "^5.0.0",
     "ramda": "^0.27.1",
     "rollup-plugin-import-css": "^1.1.4",

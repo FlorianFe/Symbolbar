@@ -3,1244 +3,2130 @@
     {
       "code": "amalg",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "cup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "oplus",
       "package": 0,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 2
     },
     {
       "code": "times",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "ast",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "dagger",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "oslash",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "bigcirc",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "ddagger",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "otimes",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "bigtriangledown",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "diamond",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "pm",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "unlhd",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "bigtriangleup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "div",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "rhd",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "unrhd",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "bullet",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "lhd",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "setminus",
       "package": 0,
-      "keywords": [
-        "subtraction",
-        "-"
-      ]
+      "keywords": {
+        "text": [
+          "subtraction"
+        ],
+        "math": [
+          "-"
+        ]
+      },
+      "id": 20
     },
     {
       "code": "uplus",
       "package": 0,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition",
+          "u"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 21
     },
     {
       "code": "cap",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     },
     {
       "code": "mp",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 23
     },
     {
       "code": "sqcap",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     },
     {
       "code": "vee",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 25
     },
     {
       "code": "cdot",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 26
     },
     {
       "code": "odot",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 27
     },
     {
       "code": "sqcup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 28
     },
     {
       "code": "wedge",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 29
     },
     {
       "code": "circ",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 30
     },
     {
       "code": "ominus",
       "package": 0,
-      "keywords": [
-        "subtraction",
-        "-"
-      ]
+      "keywords": {
+        "text": [
+          "subtraction",
+          "o"
+        ],
+        "math": [
+          "-"
+        ]
+      },
+      "id": 31
     },
     {
       "code": "star",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 32
     },
     {
       "code": "wr",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 33
     },
     {
       "code": "barwedge",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 34
     },
     {
       "code": "circledcirc",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 35
     },
     {
       "code": "intercal",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 36
     },
     {
       "code": "boxdot",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 37
     },
     {
       "code": "circleddash",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 38
     },
     {
       "code": "boxminus",
       "package": 1,
-      "keywords": [
-        "subtraction",
-        "-"
-      ]
+      "keywords": {
+        "text": [
+          "subtraction",
+          "box"
+        ],
+        "math": [
+          "-"
+        ]
+      },
+      "id": 39
     },
     {
       "code": "Cup",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 40
     },
     {
       "code": "ltimes",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 41
     },
     {
       "code": "boxplus",
       "package": 1,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition",
+          "box"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 42
     },
     {
       "code": "curlyvee",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 43
     },
     {
       "code": "boxtimes",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 44
     },
     {
       "code": "curlywedge",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 45
     },
     {
       "code": "rtimes",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 46
     },
     {
       "code": "Cap",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 47
     },
     {
       "code": "divideontimes",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 48
     },
     {
       "code": "smallsetminus",
       "package": 1,
-      "keywords": [
-        "subtraction",
-        "-"
-      ]
+      "keywords": {
+        "text": [
+          "subtraction",
+          "small",
+          "set"
+        ],
+        "math": [
+          "-"
+        ]
+      },
+      "id": 49
     },
     {
       "code": "centerdot",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 50
     },
     {
       "code": "dotplus",
       "package": 1,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition",
+          "dot"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 51
     },
     {
       "code": "veebar",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 52
     },
     {
       "code": "circledast",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 53
     },
     {
       "code": "doublebarwedge",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 54
     },
     {
       "code": "top",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 55
     }
   ],
   [
     {
       "code": "bigcap",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "bigotimes",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "bigwedge",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "prod",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "bigcup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "bigsqcup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "coprod",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "sum",
       "package": 0,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 7
     },
     {
       "code": "bigodot",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "biguplus",
       "package": 0,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition",
+          "U"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 9
     },
     {
       "code": "int",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "bigoplus",
       "package": 0,
-      "keywords": [
-        "addition",
-        "+"
-      ]
+      "keywords": {
+        "text": [
+          "addition",
+          "O"
+        ],
+        "math": [
+          "+"
+        ]
+      },
+      "id": 11
     },
     {
       "code": "bigvee",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "oint",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "iint",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "iiint",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "iiiint",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "idotsint",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     }
   ],
   [
     {
       "code": "approx",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "equiv",
       "package": 0,
-      "keywords": [
-        "equal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 1
     },
     {
       "code": "perp",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "smile",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "asymp",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "frown",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "prec",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "succ",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "bowtie",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "Join",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "preceq",
       "package": 0,
-      "keywords": [
-        "equal",
-        "=",
-        "<="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "predecessor"
+        ],
+        "math": [
+          "=",
+          "<="
+        ]
+      },
+      "id": 10
     },
     {
       "code": "succeq",
       "package": 0,
-      "keywords": [
-        "equal",
-        "=",
-        ">="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "successor"
+        ],
+        "math": [
+          "=",
+          ">="
+        ]
+      },
+      "id": 11
     },
     {
       "code": "cong",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "mid",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "propto",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "vdash",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "dashv",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "models",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "sim",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "doteq",
       "package": 0,
-      "keywords": [
-        "equal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "dot"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 19
     },
     {
       "code": "parallel",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "simeq",
       "package": 0,
-      "keywords": [
-        "equal",
-        "=",
-        "similar"
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "similar"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 21
     },
     {
       "code": "approxeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        "approximately"
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "approximately"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 22
     },
     {
       "code": "eqcirc",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        "circle"
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "circle"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 23
     },
     {
       "code": "succapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     },
     {
       "code": "backepsilon",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 25
     },
     {
       "code": "fallingdotseq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "falling",
+          "dots"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 26
     },
     {
       "code": "succcurlyeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        ">="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "successor",
+          "curly"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 27
     },
     {
       "code": "backsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 28
     },
     {
       "code": "multimap",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 29
     },
     {
       "code": "succsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 30
     },
     {
       "code": "backsimeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        "similar"
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "back",
+          "similar"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 31
     },
     {
       "code": "pitchfork",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 32
     },
     {
       "code": "therefore",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 33
     },
     {
       "code": "because",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 34
     },
     {
       "code": "precapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 35
     },
     {
       "code": "thickapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 36
     },
     {
       "code": "between",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 37
     },
     {
       "code": "preccurlyeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        "<="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "predecessor",
+          "curly"
+        ],
+        "math": [
+          "=",
+          "<="
+        ]
+      },
+      "id": 38
     },
     {
       "code": "thicksim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 39
     },
     {
       "code": "Bumpeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "bump"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 40
     },
     {
       "code": "precsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 41
     },
     {
       "code": "varpropto",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 42
     },
     {
       "code": "bumpeq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 43
     },
     {
       "code": "risingdotseq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "rising",
+          "dots"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 44
     },
     {
       "code": "Vdash",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 45
     },
     {
       "code": "circeq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        "circle"
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "circle"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 46
     },
     {
       "code": "shortmid",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 47
     },
     {
       "code": "vDash",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 48
     },
     {
       "code": "curlyeqprec",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 49
     },
     {
       "code": "shortparallel",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 50
     },
     {
       "code": "Vvdash",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 51
     },
     {
       "code": "curlyeqsucc",
       "package": 1,
-      "keywords": [
-        "equal",
-        "=",
-        ">="
-      ]
+      "keywords": {
+        "text": [
+          "equal",
+          "successor",
+          "curly"
+        ],
+        "math": [
+          "=",
+          ">="
+        ]
+      },
+      "id": 52
     },
     {
       "code": "smallfrown",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 53
     },
     {
       "code": "doteqdot",
       "package": 1,
-      "keywords": [
-        "eqal",
-        "="
-      ]
+      "keywords": {
+        "text": [
+          "equal"
+        ],
+        "math": [
+          "="
+        ]
+      },
+      "id": 54
     },
     {
       "code": "smallsmile",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 55
     }
   ],
   [
     {
       "code": "sqsubset",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "sqsupseteq",
       "package": 0,
-      "keywords": [
-        "equal",
-        ">=",
-        "super",
-        "square"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "supset",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "sqsubseteq",
       "package": 0,
-      "keywords": [
-        "equal",
-        "<=",
-        "sub",
-        "square"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "subset",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "supseteq",
       "package": 0,
-      "keywords": [
-        "equal",
-        ">=",
-        "super"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "sqsupset",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "subseteq",
       "package": 0,
-      "keywords": [
-        "equal",
-        ">=",
-        "sub"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "nsubseteq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!<=",
-        "sub",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "subseteqq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "<=",
-        "sub"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "supsetneqq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!>=",
-        "super",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "nsupseteq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!>=",
-        "super",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "subsetneq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!<=",
-        "sub",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "varsubsetneq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "nsupseteqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "subsetneqq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!<=",
-        "sub",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "varsubsetneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "sqsubset",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "Supset",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "varsupsetneq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "sqsupset",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "supseteqq",
       "package": 1,
-      "keywords": [
-        "equal",
-        ">=",
-        "super"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 21
     },
     {
       "code": "varsupsetneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     },
     {
       "code": "Subset",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 23
     },
     {
       "code": "supsetneq",
       "package": 1,
-      "keywords": [
-        "equal",
-        "!>=",
-        "super",
-        "not"
-      ]
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     }
   ],
   [
     {
       "code": "geq",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [
+          "greater",
+          "equal"
+        ],
+        "math": [
+          ">="
+        ]
+      },
+      "id": 0
     },
     {
       "code": "gg",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [
+          "greater"
+        ],
+        "math": [
+          ">"
+        ]
+      },
+      "id": 1
     },
     {
       "code": "leq",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [
+          "less",
+          "equal"
+        ],
+        "math": [
+          "<="
+        ]
+      },
+      "id": 2
     },
     {
       "code": "ll",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [
+          "less"
+        ],
+        "math": [
+          "<"
+        ]
+      },
+      "id": 3
     },
     {
       "code": "neq",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [
+          "greater",
+          "equal"
+        ],
+        "math": [
+          "=/=",
+          "=|="
+        ]
+      },
+      "id": 4
     },
     {
       "code": "eqslantgtr",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "gtrdot",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "lesseqgtr",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "ngeq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "eqslantless",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "gtreqless",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "lesseqqgtr",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "ngeqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "geqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "gtreqqless",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "lessgtr",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "ngeqslant",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "geqslant",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "gtrless",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "lesssim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "ngtr",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "ggg",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 21
     },
     {
       "code": "gtrsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     },
     {
       "code": "lll",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 23
     },
     {
       "code": "nleq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     },
     {
       "code": "gnapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 25
     },
     {
       "code": "gvertneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 26
     },
     {
       "code": "lnapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 27
     },
     {
       "code": "nleqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 28
     },
     {
       "code": "gneq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 29
     },
     {
       "code": "leqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 30
     },
     {
       "code": "lneq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 31
     },
     {
       "code": "nleqslant",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 32
     },
     {
       "code": "gneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 33
     },
     {
       "code": "leqslant",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 34
     },
     {
       "code": "lneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 35
     },
     {
       "code": "nless",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 36
     },
     {
       "code": "gnsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 37
     },
     {
       "code": "lessapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 38
     },
     {
       "code": "lnsim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 39
     },
     {
       "code": "gtrapprox",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 40
     },
     {
       "code": "lessdot",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 41
     },
     {
       "code": "lvertneqq",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 42
     }
   ],
   [
     {
       "code": "Downarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "nwarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "downarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "Rightarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "searrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "leadsto",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "longmapsto",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "swarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "uparrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "Leftarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "Uparrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "mapsto",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "updownarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "nearrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "Updownarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "Rsh",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "downdownarrows",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "Lsh",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "upuparrows",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     }
   ],
   [],
@@ -1248,828 +2134,1476 @@
     {
       "code": "arccos",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "cos",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "csc",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "exp",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "ker",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "limsup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "min",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "sinh",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "arcsin",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "cosh",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "deg",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "gcd",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "lg",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "ln",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "Pr",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "sup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "arctan",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "cot",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "det",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "hom",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "lim",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "log",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 21
     },
     {
       "code": "sec",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     },
     {
       "code": "tan",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 23
     },
     {
       "code": "arg",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     },
     {
       "code": "coth",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 25
     },
     {
       "code": "dim",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 26
     },
     {
       "code": "inf",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 27
     },
     {
       "code": "liminf",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 28
     },
     {
       "code": "max",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 29
     },
     {
       "code": "sin",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 30
     },
     {
       "code": "tanh",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 31
     },
     {
       "code": "bmod",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 32
     },
     {
       "code": "injlim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 33
     },
     {
       "code": "varinjlim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 34
     },
     {
       "code": "varlimsup",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 35
     },
     {
       "code": "projlim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 36
     },
     {
       "code": "varliminf",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 37
     },
     {
       "code": "varprojlim",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 38
     }
   ],
   [
     {
       "code": "alpha",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "theta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "tau",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "beta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "vartheta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "pi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "upsilon",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "gamma",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "iota",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "varpi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "phi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "delta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "kappa",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "rho",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "varphi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "epsilon",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "lambda",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "varrho",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "chi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "varepsilon",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "mu",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "sigma",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 21
     },
     {
       "code": "psi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     },
     {
       "code": "zeta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 23
     },
     {
       "code": "nu",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 24
     },
     {
       "code": "varsigma",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 25
     },
     {
       "code": "omega",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 26
     },
     {
       "code": "eta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 27
     },
     {
       "code": "xi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 28
     },
     {
       "code": "Gamma",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 29
     },
     {
       "code": "Lambda",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 30
     },
     {
       "code": "Sigma",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 31
     },
     {
       "code": "Psi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 32
     },
     {
       "code": "Delta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 33
     },
     {
       "code": "Xi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 34
     },
     {
       "code": "Upsilon",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 35
     },
     {
       "code": "Omega",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 36
     },
     {
       "code": "Theta",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 37
     },
     {
       "code": "Pi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 38
     },
     {
       "code": "Phi",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 39
     },
     {
       "code": "digamma",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 40
     },
     {
       "code": "varkappa",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 41
     }
   ],
   [
     {
       "code": "beth",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "gimel",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "daleth",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "aleph",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     }
   ],
   [
     {
       "code": "bot",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "forall",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "imath",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "ni",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "top",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "ell",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "hbar",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "in",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "partial",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "wp",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "exists",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "Im",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "jmath",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "Re",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "Bbbk",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "complement",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "hbar",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "circledR",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     },
     {
       "code": "Finv",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 18
     },
     {
       "code": "hslash",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 19
     },
     {
       "code": "circledS",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 20
     },
     {
       "code": "Game",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 21
     },
     {
       "code": "nexists",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 22
     }
   ],
   [
     {
       "code": "ulcorner",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "urcorner",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "llcorner",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "lrcorner",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     }
   ],
   [
     {
       "code": "downarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "Downarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "langle",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "rangle",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "|",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "lceil",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "rceil",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "uparrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "Uparrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "lfloor",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "rfloor",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "updownarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "Updownarrow",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     },
     {
       "code": "{",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 13
     },
     {
       "code": "}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 14
     },
     {
       "code": "backslash",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 15
     },
     {
       "code": "vert",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 16
     },
     {
       "code": "Vert",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 17
     }
   ],
   [
     {
       "code": "lmoustache",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "rmoustache",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "lgroup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "rgroup",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "arrowvert",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "Arrowvert",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "bracevert",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "lvert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "rvert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "lVert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "rVert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "vert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "Vert",
       "package": 1,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     }
   ],
   [
     {
       "code": "acute{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "check{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "grave{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "tilde{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "bar{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "ddot{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     },
     {
       "code": "hat{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 6
     },
     {
       "code": "vec{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 7
     },
     {
       "code": "breve{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 8
     },
     {
       "code": "dot{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 9
     },
     {
       "code": "mathring{a}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 10
     },
     {
       "code": "imath",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 11
     },
     {
       "code": "jmath",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 12
     }
   ],
   [
     {
       "code": "widetilde{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 0
     },
     {
       "code": "widehat{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 1
     },
     {
       "code": "underline{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 2
     },
     {
       "code": "overbrace{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 3
     },
     {
       "code": "underbrace{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 4
     },
     {
       "code": "sqrt{abc}",
       "package": 0,
-      "keywords": []
+      "keywords": {
+        "text": [],
+        "math": []
+      },
+      "id": 5
     }
   ]
 ]

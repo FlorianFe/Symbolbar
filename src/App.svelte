@@ -3,6 +3,7 @@
 	
 import { onMount } from 'svelte'
 import texToSVG from 'tex-to-svg'
+import MiniSearch from 'minisearch'
 import SvelteTooltip from 'svelte-tooltip'
 import Textfield from '@smui/textfield'
 import categories  from '../data/symbols.json'
@@ -24,12 +25,30 @@ const htmlToElement = (html) =>
 const filterSymbols = (symbols, searchWord) => 
 {	
 	if(searchWord.length <= 0) return symbols
-	
-	return symbols.filter((symbol) => 
+
+	let miniSearch = new MiniSearch(
 	{
-		if(symbol.code.includes(searchWord)) return true
-		return symbol.keywords.some((keyWord) => keyWord.includes(searchWord))
+		fields: ['code', 'keywords.text', 'keywords.math'],
+		storeFields: ['code'],
+		extractField: (document, fieldName) => 
+		{
+			// Access nested fields
+			return fieldName.split('.').reduce((doc, key) => doc && doc[key], document)
+		}
 	})
+
+	// Index all documents
+	miniSearch.addAll(symbols)
+
+	const searchResults = miniSearch.search(searchWord, 
+	{ 
+		fuzzy: term => term.length > 3 ? 0.2 : null, 
+		boost: { 'keywords.math': 3 } 
+	})
+
+	console.log(searchResults)
+
+	return searchResults.map(searchResult => symbols[searchResult.id])
 }
 
 categories.forEach(symbols => symbols.forEach(symbol => 
