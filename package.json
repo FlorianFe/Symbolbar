@@ -1,13 +1,39 @@
 {
   "name": "symbolbar",
+  "productName" : "Symbolbar",
   "version": "0.9.0",
+  "author": "Florian Fechner", 
+  "description": "An application app to find the code of LaTeX symbols",
   "main": "electron.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
     "electron": "electron .",
+    "electron-build": "electron-builder",
     "build-symbols": "node ./dev/parseSymbols.js"
+  },
+  "build": {
+    "appId": "de.florianfe.symbolbar",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "icon@2x"
+    },
+    "win": {
+      "icon": "build/icon"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "icon": "build/icons/",
+      "desktop": {
+        "Name": "Symbolbar",
+        "Comment": "An application app to find the code of LaTeX symbols",
+        "Categories": "Utility"
+      }
+    }
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "16.0.0",
@@ -16,6 +42,7 @@
     "@tsconfig/svelte": "^1.0.10",
     "ava": "^3.13.0",
     "electron": "^10.1.5",
+    "electron-builder": "^22.10.5",
     "pdfreader": "^1.2.8",
     "rollup": "^2.33.2",
     "rollup-plugin-json": "^4.0.0",
