@@ -5,7 +5,7 @@ import { onMount } from 'svelte'
 import texToSVG from 'tex-to-svg'
 import MiniSearch from 'minisearch'
 import SvelteTooltip from 'svelte-tooltip'
-import Textfield from '@smui/textfield'
+import Textfield from '@smui/textfield/styled'
 import categories  from '../data/symbols.json'
 import CATEGORIES from '../data/categories.json'
 
@@ -45,8 +45,6 @@ const filterSymbols = (symbols, searchWord) =>
 		fuzzy: term => term.length > 3 ? 0.2 : null, 
 		boost: { 'keywords.math': 3 } 
 	})
-
-	console.log(searchResults)
 
 	return searchResults.map(searchResult => symbols[searchResult.id])
 }
@@ -141,17 +139,18 @@ header
 	on:keydown={(e) => 
 	{
 		const key = e.key;
-
+		
 		if(key === 'Escape')
 		{
 			try
 			{
-				const { remote } = require('electron')
+				const remote = require('@electron/remote')
 				const window = remote.getCurrentWindow()
 				window.hide()
 			}
 			catch(e)
 			{
+				console.error(e)
 				console.warn("You have to use electron for window hiding options")
 			}
 		}
@@ -161,7 +160,7 @@ header
 <main>
 	<header>
 		<div class="search-container">
-			<Textfield bind:value={searchWord} label="symbol"/>
+			<Textfield bind:value={searchWord} label="symbol"></Textfield>
 		</div>
 		<div class="selected-container">
 			{#if selectedSymbol != null}
@@ -185,13 +184,16 @@ header
 					{ 
 						try
 						{
-							const { clipboard, remote } = require('electron')
+							const { clipboard } = require('electron')
+							const remote = require('@electron/remote')
+
 							clipboard.writeText('\\' + symbol.code) 
 							const window = remote.getCurrentWindow()
        						window.hide()
 						}
 						catch(e)
 						{
+							console.error(e)
 							console.warn("You have to use electron for clipboard actions")
 						}
 

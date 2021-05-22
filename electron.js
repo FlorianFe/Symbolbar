@@ -3,6 +3,8 @@ const path = require('path')
 const { menubar } = require('menubar');
 const { globalShortcut, nativeTheme } = require('electron')
 
+require('@electron/remote/main').initialize()
+
 nativeTheme.on("updated", () => 
 {
   const isDark = nativeTheme.shouldUseDarkColors || false
@@ -25,7 +27,8 @@ const mb = menubar(
     webPreferences: 
     {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   }
 })
